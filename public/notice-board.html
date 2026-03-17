@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TGICCC Notice Board</title>
+
+<style>
+
+body{
+background:#050d26;
+font-family:Segoe UI;
+color:#e6faff;
+margin:0;
+}
+
+/* HEADER */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+border-bottom:2px solid #00eaff;
+box-shadow:0 2px 10px #00eaff;
+}
+
+.heading{
+font-size:26px;
+color:#00eaff;
+letter-spacing:3px;
+font-weight:bold;
+}
+
+.header-btn{
+padding:8px 16px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+color:white;
+background:#061733;
+box-shadow:0 0 10px #00eaff;
+transition:0.3s;
+}
+
+.header-btn:hover{
+box-shadow:0 0 15px #00eaff,0 0 25px #00eaff;
+transform:scale(1.05);
+}
+
+/* CONTAINER */
+
+.container{
+width:900px;
+margin:auto;
+padding:20px;
+}
+
+/* TOPBAR */
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.title-area{
+display:flex;
+flex-direction:column;
+}
+
+.title-area h1{
+margin:0;
+color:#67f6ff;
+}
+
+.subtitle{
+margin:3px 0 0 0;
+font-size:13px;
+color:#9ecbff;
+}
+
+.post-btn{
+background:#00c853;
+border:none;
+padding:10px 20px;
+border-radius:6px;
+color:white;
+cursor:pointer;
+box-shadow:0 0 10px #00c853;
+}
+
+.post-btn:hover{
+box-shadow:0 0 20px #00ff7b;
+transform:scale(1.05);
+}
+
+/* SEARCH */
+
+.search-box{
+position:relative;
+display:inline-block;
+}
+
+.search-icon{
+position:absolute;
+left:10px;
+top:50%;
+transform:translateY(-50%);
+font-size:14px;
+color:#00eaff;
+}
+
+.search{
+padding:8px 8px 8px 30px;
+background:#081c3a;
+border:1px solid #00eaff;
+color:white;
+border-radius:5px;
+width:300px;
+}
+
+/* FILTERS */
+
+.filters{
+margin:15px 0;
+}
+
+.filters button{
+padding:7px 15px;
+border:none;
+border-radius:6px;
+margin-right:8px;
+cursor:pointer;
+font-weight:bold;
+color:white;
+}
+
+.filter-all{background:#3fa9ff;}
+.filter-urgent{background:#ff3b3b;}
+.filter-important{background:#ffc107;color:black;}
+.filter-normal{background:#00c853;}
+
+.filters button:hover{
+transform:scale(1.05);
+box-shadow:0 0 10px white;
+}
+
+/* NOTICE LIST */
+
+#noticeList{
+max-height:500px;
+overflow-y:auto;
+padding-right:10px;
+}
+
+#noticeList::-webkit-scrollbar{
+width:8px;
+}
+
+#noticeList::-webkit-scrollbar-thumb{
+background:#00eaff;
+border-radius:10px;
+}
+
+/* NOTICE CARD */
+
+.notice{
+background:#061733;
+padding:20px;
+margin-bottom:15px;
+border-radius:10px;
+border:1px solid #00eaff33;
+box-shadow:0 0 10px #00eaff22;
+}
+
+.notice h2{
+margin:0;
+color:#67f6ff;
+}
+
+.badge{
+padding:3px 10px;
+border-radius:10px;
+font-size:12px;
+font-weight:bold;
+}
+
+.urgent{background:#ff3b3b;}
+.important{background:#ffc107;color:black;}
+.normal{background:#3fa9ff;}
+
+.dates{
+font-size:12px;
+color:#a9c7e6;
+margin-top:10px;
+}
+
+.actions{
+display:flex;
+align-items:center;
+gap:10px;
+margin-top:10px;
+}
+
+.actions button{
+padding:6px 12px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+.edit{background:#3fa9ff;color:white;}
+.delete{background:#ff3b3b;color:white;}
+
+/* MODAL */
+
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.75);
+justify-content:center;
+align-items:center;
+}
+
+.modal-box{
+background:#081b3a;
+padding:30px;
+border-radius:12px;
+width:520px;
+border:1px solid #00eaff;
+box-shadow:0 0 20px #00eaff55;
+position:relative;
+}
+
+.close-btn{
+position:absolute;
+top:12px;
+right:12px;
+width:32px;
+height:32px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+background:#ff3b3b;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+input,textarea,select{
+width:100%;
+margin-top:8px;
+margin-bottom:15px;
+padding:10px;
+background:#04122a;
+border:1px solid #00eaff55;
+color:white;
+border-radius:5px;
+}
+
+textarea{
+height:150px;
+}
+
+.save-btn{
+background:#00c853;
+border:none;
+padding:12px;
+width:100%;
+border-radius:5px;
+cursor:pointer;
+box-shadow:0 0 10px #00c853;
+}
+
+.save-btn:hover{
+box-shadow:0 0 20px #00ff7b;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<button class="header-btn" onclick="history.back()"> Back</button>
+<div class="heading">TGICCC</div>
+<button class="header-btn" onclick="goProfile()">👤 Profile</button>
+</div>
+
+<div class="container">
+
+<div class="topbar">
+
+<div class="title-area">
+<h1>📢 NOTICE BOARD</h1>
+<p class="subtitle"><h4>Official announcements and updates</h4></p>
+</div>
+
+<button class="post-btn" onclick="openModal()">+ POST NOTICE</button>
+
+</div>
+
+<div class="search-box">
+<span class="search-icon">🔍</span>
+<input class="search" placeholder="Search notices..." oninput="searchNotice(this.value)">
+</div>
+
+<div class="filters">
+<button class="filter-all" onclick="filterPriority('all')">All</button>
+<button class="filter-urgent" onclick="filterPriority('urgent')">Urgent</button>
+<button class="filter-important" onclick="filterPriority('important')">Important</button>
+<button class="filter-normal" onclick="filterPriority('normal')">Normal</button>
+</div>
+
+<div id="noticeList"></div>
+
+</div>
+
+<div class="modal" id="modal">
+
+<div class="modal-box">
+
+<span class="close-btn" onclick="closeModal()">✖</span>
+
+<h3>Create Notice</h3>
+
+<input id="title" placeholder="Title">
+<textarea id="content" placeholder="Content"></textarea>
+
+<select id="priority">
+<option value="normal">Normal</option>
+<option value="important">Important</option>
+<option value="urgent">Urgent</option>
+</select>
+
+<button class="save-btn" onclick="saveNotice()">Save Notice</button>
+
+</div>
+
+</div>
+
+<script>
+
+function goProfile(){
+window.location.href="profile.html";
+}
+
+const api="/api/notices";
+
+let notices=[];
+let filtered=[];
+let editId=null;
+
+async function load(){
+
+const res=await fetch(api);
+notices=await res.json();
+
+filtered=[...notices];
+
+render();
+
+}
+
+function render(){
+
+const container=document.getElementById("noticeList");
+container.innerHTML="";
+
+filtered.forEach(n=>{
+
+container.innerHTML+=`
+
+<div class="notice">
+
+<h2>Title : ${n.title}</h2>
+
+<p><b>Content :</b> ${n.content}</p>
+
+<div class="dates">
+Created: ${new Date(n.created_dt).toLocaleString()} <br>
+Edited: ${n.updated_dt ? new Date(n.updated_dt).toLocaleString() : "Not Edited Yet"}
+</div>
+
+<div class="actions">
+
+<span class="badge ${n.priority}">
+${n.priority.toUpperCase()}
+</span>
+
+<button class="edit" onclick="editNotice(${n.id})">Edit</button>
+<button class="delete" onclick="deleteNotice(${n.id})">Delete</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+function openModal(){
+
+editId=null;
+
+title.value="";
+content.value="";
+priority.value="normal";
+
+modal.style.display="flex";
+
+}
+
+function closeModal(){
+modal.style.display="none";
+}
+
+function editNotice(id){
+
+const n=notices.find(x=>x.id===id);
+
+editId=id;
+
+title.value=n.title;
+content.value=n.content;
+priority.value=n.priority;
+
+modal.style.display="flex";
+
+}
+
+async function saveNotice(){
+
+const titleVal=title.value.trim();
+const contentVal=content.value.trim();
+
+if(titleVal==="" || contentVal===""){
+
+alert("Please fill all fields");
+return;
+
+}
+
+const data={
+title:titleVal,
+content:contentVal,
+priority:priority.value
+};
+
+if(editId){
+
+await fetch(api+"/"+editId,{
+method:"PUT",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(data)
+});
+
+}else{
+
+await fetch(api,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(data)
+});
+
+}
+
+closeModal();
+load();
+
+}
+
+async function deleteNotice(id){
+
+await fetch(api+"/"+id,{method:"DELETE"});
+load();
+
+}
+
+function searchNotice(text){
+
+text=text.toLowerCase();
+
+filtered=notices.filter(n=>
+n.title.toLowerCase().includes(text)||
+n.content.toLowerCase().includes(text)
+);
+
+render();
+
+}
+
+function filterPriority(type){
+
+if(type==="all"){
+filtered=[...notices];
+}else{
+filtered=notices.filter(n=>n.priority===type);
+}
+
+render();
+
+}
+
+load();
+
+</script>
+
+</body>
+</html>

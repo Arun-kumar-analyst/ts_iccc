@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TGiCCC Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI, sans-serif;
+    background:#07132b;
+    color:white;
+}
+
+/* ===== TOPBAR ===== */
+.topbar{
+    background:#081c3a;
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+    border-bottom:1px solid #00eaff;
+}
+
+.logo-area{
+    font-size:1.4rem;
+    color:#00E5FF;
+    font-weight:bold;
+}
+
+.top-right{
+    display:flex;
+    gap:15px;
+}
+
+.logout-btn{
+    background:transparent;
+    border:2px solid red;
+    color:red;
+    padding:6px 15px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.logout-btn:hover{
+    background:red;
+    color:white;
+}
+
+/* ===== SEARCH BOX ===== */
+.search-box{
+    position:relative;
+    width:350px;
+}
+
+.search-box input{
+    width:100%;
+    padding:8px 40px 8px 15px;
+    border-radius:25px;
+    border:1px solid #00eaff;
+    background:#0b1c3f;
+    color:white;
+    outline:none;
+    font-size:14px;
+}
+
+.search-box input::placeholder{
+    color:#9bb3c9;
+}
+
+.search-icon{
+    position:absolute;
+    right:12px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#00E5FF;
+    font-size:14px;
+    pointer-events:none;
+}
+
+/* ===== LAYOUT ===== */
+.dashboard-body{
+    display:flex;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+    width:220px;
+    background:#0C1E4A;
+    padding:30px 15px;
+    min-height:calc(100vh - 70px);
+}
+
+.menu-item{
+    padding:12px 10px;
+    margin-bottom:12px;
+    border-radius:8px;
+    cursor:pointer;
+    color:#b0c7d9;
+    transition:0.3s;
+}
+
+.menu-item:hover,
+.menu-item.active{
+    background:#132B63;
+    color:#00E5FF;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content{
+    flex:1;
+    padding:40px;
+}
+
+.dashboard-title{
+    font-size:2.6rem;
+    color:#00E5FF;
+    margin-bottom:10px;
+}
+
+.welcome-text{
+    color:#b0c7d9;
+    margin-bottom:40px;
+}
+
+/* ===== DASHBOARD CARDS ===== */
+.dashboard-cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+}
+
+.dash-card{
+    background:#0b1c3f;
+    padding:25px;
+    border-radius:18px;
+    border:1px solid #00eaff;
+    transition:0.3s;
+}
+
+.dash-card:hover{
+    box-shadow:0 0 20px rgba(0,255,255,0.6);
+    transform:translateY(-5px);
+}
+
+.dash-icon{
+    font-size:22px;
+    margin-bottom:15px;
+}
+
+.dash-number{
+    font-size:2.4rem;
+    font-weight:bold;
+    color:#00E5FF;
+}
+
+.dash-title{
+    margin-top:8px;
+    font-size:0.85rem;
+    letter-spacing:1px;
+    color:#9bb3c9;
+}
+
+.dash-sub{
+    margin-top:6px;
+    font-size:0.85rem;
+    color:#00ff88;
+}
+
+/* ===== ACTION BOXES ===== */
+.action-section{
+    margin-top:50px;
+}
+
+.action-header{
+    font-size:1.4rem;
+    margin-bottom:20px;
+    color:#00E5FF;
+}
+
+.action-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+}
+
+.action-card{
+    background:#0f1f45;
+    padding:25px;
+    border-radius:18px;
+    border:1px solid rgba(0,229,255,0.4);
+    text-align:center;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.action-card:hover{
+    box-shadow:0 0 18px rgba(0,255,255,0.6);
+    transform:translateY(-5px);
+}
+
+.action-icon{
+    font-size:30px;
+    margin-bottom:15px;
+}
+
+.action-text{
+    font-size:16px;
+    font-weight:bold;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+    .dashboard-body{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        width:100%;
+        min-height:auto;
+        display:flex;
+        overflow-x:auto;
+    }
+
+    .menu-item{
+        flex:1;
+        text-align:center;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+    
+    <div style="display:flex; align-items:center; gap:20px;">
+        <div class="logo-area">🏛 TGiCCC</div>
+
+        <!-- SEARCH BOX LEFT SIDE -->
+        <div class="search-box">
+            <input type="text" placeholder="Search..." id="searchInput">
+            <span class="search-icon">🔍</span>
+        </div>
+    </div>
+
+    <div class="top-right">
+        <button class="logout-btn" onclick="logout()">LOGOUT</button>
+    </div>
+
+</div>
+
+<div class="dashboard-body">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="menu-item active">📊 Dashboard</div>
+        <div class="menu-item" onclick="goReportIncident()">🚨 Report Incidents</div> 
+        <div class="menu-item" onclick="goNoticeBoard()">📢 Notice Board</div>
+         <div class="menu-item" onclick="goEvents()">📅 Events</div>
+       <div class="menu-item" onclick="goDirectory()"> 👥 Directory</div> 
+       <div class="menu-item" onclick="goDocument()"> 📁 Documents</div>
+      <div class="menu-item" onclick="goTaskManager()"> ✅ Task Manager</div>
+       <div class="menu-item" onclick="goGallery()"> 🖼️ Gallery</div>
+       <div class="menu-item" onclick="goProfile()"> 👤 My Profile</div>
+<div class="menu-item" onclick="goProfileDetails()"> 🪪 Profile Details</div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <h1 class="dashboard-title">COMMAND CENTER</h1>
+        <p class="welcome-text">Welcome back, System Administrator!</p>
+
+        <!-- STAT CARDS -->
+        <div class="dashboard-cards">
+
+            <div class="dash-card">
+                <div class="dash-icon">✉</div>
+                <div class="dash-number">24</div>
+                <div class="dash-title">ACTIVE NOTICES</div>
+                <div class="dash-sub">↑ 12% from yesterday</div>
+            </div>
+
+            <div class="dash-card">
+                <div class="dash-icon">🕒</div>
+                <div class="dash-number">98%</div>
+                <div class="dash-title">ATTENDANCE RATE</div>
+                <div class="dash-sub">↑ 5% this month</div>
+            </div>
+
+            <div class="dash-card">
+                <div class="dash-icon">👥</div>
+                <div class="dash-number">156</div>
+                <div class="dash-title">ACTIVE PERSONNEL</div>
+                <div class="dash-sub">↑ 4 online now</div>
+            </div>
+
+            <div class="dash-card">
+                <div class="dash-icon">📋</div>
+                <div class="dash-number">08</div>
+                <div class="dash-title">PENDING ITEMS</div>
+                <div class="dash-sub">Updated today</div>
+            </div>
+
+        </div>
+
+        <!-- ACTION BOXES -->
+        <div class="action-section">
+            <div class="action-header">⚡ Quick Actions</div>
+
+            <div class="action-grid">
+
+                <div class="action-card" onclick="goReportIncident()">
+                    <div class="action-icon">🚨</div>
+                    <div class="action-text">Report Incident</div>
+                </div>
+
+                <div class="action-card" onclick="goNoticeBoard()">
+                    <div class="action-icon">📢</div>
+                    <div class="action-text">View Notices</div>
+                </div>
+
+                 
+
+               <div class="action-card" onclick="goGallery()">
+                    <div class="action-icon">🖼️ </div>
+                    <div class="action-text">Gallery</div>
+                </div>
+
+                 <div class="action-card" onclick="goTaskManager()">
+               <div class="action-icon">✅</div>
+               <div class="action-text">Task Manager</div>
+               </div>
+
+               <div class="action-card" onclick="goDirectory()">
+               <div class="action-icon">👥</div>
+               <div class="action-text">Directory</div>
+               </div>
+                
+               <div class="action-card" onclick="goEvents()">
+               <div class="action-icon">📅</div>
+               <div class="action-text">Events</div>
+               </div>
+
+                <div class="action-card" onclick="goDocument()">
+               <div class="action-icon">📁</div>
+               <div class="action-text">Documents</div>
+               </div>
+
+                <div class="action-card" onclick="goProfile()">
+               <div class="action-icon">👤</div>
+               <div class="action-text">My Profile</div>
+               </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+
+
+// SEARCH FUNCTIONALITY
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", function () {
+    const filter = searchInput.value.toLowerCase();
+
+    // Filter Sidebar Menu Items
+    const menuItems = document.querySelectorAll(".menu-item");
+    menuItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(filter) ? "block" : "none";
+    });
+
+    // Filter Quick Action Cards
+    const actionCards = document.querySelectorAll(".action-card");
+    actionCards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(filter) ? "block" : "none";
+    });
+
+    // Filter Dashboard Cards
+    const dashCards = document.querySelectorAll(".dash-card");
+    dashCards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(filter) ? "block" : "none";
+    });
+});
+
+
+
+async function loadUser(){
+
+const empId=localStorage.getItem("employee_id");
+
+if(!empId){
+alert("User not logged in");
+window.location="login.html";
+return;
+}
+
+const res=await fetch("http://localhost:5000/api/user/"+empId);
+const user=await res.json();
+
+document.getElementById("empid").innerText=user.employee_id;
+document.getElementById("name").innerText=user.name;
+document.getElementById("email").innerText=user.email;
+document.getElementById("phone").innerText=user.phone;
+document.getElementById("dept").innerText=user.department;
+
+}
+
+
+
+
+function goIncidents(){
+    window.location.href="incidents.html";
+}
+
+function goNoticeBoard(){
+    window.location.href="notice-board.html";
+}
+
+function goReportIncident(){
+    window.location.href="report-incident.html";
+}
+
+function goEvents(){
+    window.location.href="events.html";
+}
+
+function goDirectory(){
+    window.location.href="directory.html";
+}
+
+function goProfile(){
+    window.location.href="system-administration.html";
+}
+
+function goGallery(){
+    window.location.href="gallery.html";
+}
+
+function goDocument(){
+    window.location.href="document.html";
+}
+
+function goTaskManager(){
+    window.location.href="taskmanager.html";
+}
+
+function logout(){
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.replace("index.html");
+}
+
+function goProfile(){
+window.location.href="profile.html";
+}
+
+function goProfileDetails(){
+window.location.href="profiledetails.html";
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TGiCCC Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+color:#fff;
+overflow-x:hidden;
+
+background:linear-gradient(
+135deg,
+#162f57 0%,
+#1f3f73 40%,
+#2a4f88 70%,
+#1e3f70 100%
+);
+}
+
+
+/* small glowing particles */
+body::before{
+content:"";
+position:fixed;
+inset:0;
+pointer-events:none;
+background-image:
+radial-gradient(circle,#9feaff 1.2px,transparent 2px),
+radial-gradient(circle,#9feaff 1px,transparent 2px),
+radial-gradient(circle,#9feaff 1px,transparent 2px);
+background-size:220px 220px,300px 300px,350px 350px;
+background-position:40px 60px,180px 120px,90px 200px;
+opacity:0.35;
+}
+
+
+/* HERO */
+
+.hero{text-align:center;padding:60px 20px;position:relative}
+
+.hero h1{
+font-family:'Orbitron';
+font-size:70px;
+color:#6efaff;
+text-shadow:0 0 20px #00eaff,0 0 40px rgba(0,234,255,.7);
+letter-spacing:6px;
+}
+
+.hero h2{
+margin-top:15px;
+letter-spacing:4px;
+font-size:18px;
+opacity:.85;
+}
+
+.hero-logos{
+position:absolute;
+top:20px;
+left:0;
+width:100%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 60px;
+}
+
+.hero-logos img{
+width:150px;
+filter:none;   /* removes glow effect */
+}
+
+
+/* SCROLL TEXT */
+
+.scrolling-text-container{
+overflow:hidden;
+white-space:nowrap;
+margin:20px 0 40px;
+}
+
+.scrolling-text{
+display:inline-block;
+padding-left:100%;
+animation:scrollText 40s linear infinite;
+font-weight:bold;
+font-size:18px;
+color:#FFFFFF;
+}
+
+@keyframes scrollText{
+0%{transform:translateX(0)}
+100%{transform:translateX(-100%)}
+}
+
+/* ================= STATS ================= */
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:30px;
+padding:50px 80px;
+}
+
+.card{
+background:rgba(10,31,61,0.65);
+backdrop-filter:blur(10px);
+border-radius:20px;
+padding:40px;
+text-align:center;
+border:1px solid rgba(0,234,255,0.35);
+
+box-shadow:
+0 0 25px rgba(0,234,255,.15),
+inset 0 0 25px rgba(0,234,255,.15);
+
+transition:.35s;
+}
+
+.card:hover{
+transform:translateY(-6px);
+box-shadow:
+0 0 35px rgba(0,234,255,.5),
+0 0 60px rgba(0,234,255,.2);
+}
+
+.card i{
+font-size:40px;
+margin-bottom:20px;
+}
+
+.card:nth-child(1) i{color:#00eaff}
+.card:nth-child(2) i{color:#ff6bff}
+.card:nth-child(3) i{color:#00ff88}
+.card:nth-child(4) i{color:#ffd400}
+
+.card h3{
+font-family:'Orbitron';
+font-size:38px;
+color:#6efaff;
+text-shadow:0 0 10px #00eaff;
+}
+
+.card p{margin-top:10px;opacity:.75}
+
+
+/* MAP + INCIDENT */
+.map-incidents-container{
+display:grid;
+grid-template-columns:55% 45%;
+gap:40px;
+padding:40px 80px;
+align-items:start;
+}
+
+.city-map-section{
+background:#0a1f3d;
+border-radius:20px;
+padding:20px;
+border:1px solid #00eaff40;
+position:relative;
+width:100%;
+max-width:750px;   /* keeps map clean size */
+margin:auto;
+}
+
+.city-map-section img{
+width:100%;
+height:auto;
+display:block;
+border-radius:20px;
+}
+
+.map-overlay{
+position:absolute;
+top:20px;
+left:20px;
+width:calc(100% - 40px);
+height:calc(100% - 60px);
+pointer-events:none;
+}
+
+/* ============================= */
+/* SMALL GLOWING DOTS */
+/* ============================= */
+
+.core{
+r:4;
+}
+
+.active .core{
+fill:#00ff88;
+filter:drop-shadow(0 0 5px #00ff88);
+}
+
+.alert .core{
+fill:#ffd400;
+filter:drop-shadow(0 0 5px #ffd400);
+}
+
+.critical .core{
+fill:#ff2e63;
+filter:drop-shadow(0 0 5px #ff2e63);
+}
+
+.critical_h .core{
+fill:#800080;
+filter:drop-shadow(0 0 5px #800080);
+}
+
+.critical_t .core{
+fill:#800000;
+filter:drop-shadow(0 0 5px #800000);
+}
+
+.critical_o .core{
+fill:#0000FF;
+filter:drop-shadow(0 0 5px #0000FF);
+}
+
+.active_t .core{
+fill:#FF0000;
+filter:drop-shadow(0 0 5px #FF0000);
+}
+
+/* SMALLER RING */
+.ring{
+fill:none;
+stroke-width:2;
+animation:radarSmall 2s infinite ease-out;
+}
+
+.active .ring{ stroke:#00ff88; }
+.alert .ring{ stroke:#ffd400; }
+.critical .ring{ stroke:#ff2e63; }
+.critical_h .ring{ stroke:#800080; }
+.critical_t .ring{ stroke:#800000; }
+.critical_o .ring{ stroke:#0000FF; }
+.active_t .ring{ stroke:#FF0000; }
+
+@keyframes radarSmall{
+0%{ r:4; opacity:0.7; }
+70%{ r:14; opacity:0.2; }
+100%{ r:18; opacity:0; }
+}
+
+/* ============================= */
+/* DISTRICT STATS PANEL */
+/* ============================= */
+
+.district-stats-wrapper{
+margin-top:30px;
+background:#071c36;
+padding:25px;
+border-radius:18px;
+border:1px solid rgba(0,234,255,0.3);
+position:relative;
+overflow:hidden;
+}
+
+/* SMALL GRID BACKGROUND (single clean version) */
+.district-stats-wrapper::before,
+.incident-card::before{
+content:"";
+position:absolute;
+inset:0;
+background-image:
+linear-gradient(rgba(0,234,255,0.05) 1px, transparent 1px),
+linear-gradient(90deg, rgba(0,234,255,0.05) 1px, transparent 1px);
+background-size:8px 8px;
+pointer-events:none;
+}
+
+/* GRID */
+.district-stats-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px;
+position:relative;
+z-index:2;
+}
+
+/* CARD BASE */
+.district-card{
+background:#0a1f3d;
+border-radius:14px;
+padding:20px 15px;
+text-align:center;
+transition:0.3s ease;
+}
+
+/* Number */
+.district-card h2{
+font-family:'Orbitron';
+font-size:24px;
+margin-bottom:6px;
+}
+
+/* Label */
+.district-card p{
+font-size:11px;
+letter-spacing:2px;
+opacity:.85;
+}
+
+/* COLOR VARIANTS */
+.cyan{
+border:1px solid #00eaff;
+box-shadow:0 0 8px rgba(0,234,255,0.3);
+}
+.cyan h2{color:#00eaff;text-shadow:0 0 6px #00eaff;}
+
+.green{
+border:1px solid #00ff88;
+box-shadow:0 0 8px rgba(0,255,136,0.3);
+}
+.green h2{color:#00ff88;text-shadow:0 0 6px #00ff88;}
+
+.yellow{
+border:1px solid #ffd400;
+box-shadow:0 0 8px rgba(255,212,0,0.3);
+}
+.yellow h2{color:#ffd400;text-shadow:0 0 6px #ffd400;}
+
+.red{
+border:1px solid #ff2e63;
+box-shadow:0 0 8px rgba(255,46,99,0.3);
+}
+.red h2{color:#ff2e63;text-shadow:0 0 6px #ff2e63;}
+
+/* FULL WIDTH CARD */
+.full-width{
+grid-column:span 2;
+}
+
+/* LEGEND */
+/* LEGEND BOX */
+
+.district-legend{
+margin-top:20px;
+display:flex;
+justify-content:center;   /* center horizontally */
+align-items:center;
+gap:40px;
+width:100%;
+text-align:center;
+}
+
+/* legend item */
+
+.legend-item{
+display:flex;
+align-items:center;
+gap:8px;
+font-size:12px;
+letter-spacing:1px;
+color:#cfefff;
+}
+
+/* blinking dot */
+
+.legend-dot{
+width:10px;
+height:10px;
+border-radius:50%;
+animation:blinkDot 1.5s infinite;
+}
+
+/* colors */
+
+.active-dot{
+background:#00ff88;
+box-shadow:0 0 6px #00ff88;
+}
+
+.alert-dot{
+background:#ffd400;
+box-shadow:0 0 6px #ffd400;
+}
+
+.critical-dot{
+background:#ff2e63;
+box-shadow:0 0 6px #ff2e63;
+}
+
+/* animation */
+
+@keyframes blinkDot{
+0%{opacity:1; transform:scale(1);}
+50%{opacity:0.4; transform:scale(1.2);}
+100%{opacity:1; transform:scale(1);}
+}
+
+
+.full-width{
+grid-column:span 1;     /* remove full width */
+justify-self:center;    /* center it */
+width:220px;            /* smaller width */
+padding:10px 8px;       /* smaller padding */
+}
+
+.incident-title{
+text-align:center;
+font-family:'Segoe UI', Arial, sans-serif;
+font-size:24px;
+color:#00eaff;
+margin-bottom:18px;
+letter-spacing:2px;
+}
+
+/* INCIDENT CARD */
+/* INCIDENT CARD */
+.incident-card{
+background:#071c36;
+border-radius:18px;
+padding:20px;
+border:1px solid #00eaff30;
+position:relative;
+overflow:hidden;
+
+width:480px;
+margin:0 auto;
+}
+
+/* grid overlay */
+.incident-card::before{
+content:"";
+position:absolute;
+inset:0;
+background-image:
+linear-gradient(rgba(0,234,255,0.06) 1px, transparent 1px),
+linear-gradient(90deg, rgba(0,234,255,0.06) 1px, transparent 1px);
+background-size:10px 10px;
+pointer-events:none;
+}
+
+
+
+/* CHART AREA */
+#incidentChart{
+width:100%;
+height:220px !important;
+position:relative;
+z-index:2;
+}
+
+/* SUMMARY SECTION */
+.summary-inside{
+display:flex;
+gap:12px;
+justify-content:center;
+margin-top:14px;
+flex-wrap:nowrap;
+position:relative;
+z-index:2;
+}
+
+/* SUMMARY CARDS */
+.summary-card{
+background:#0a1f3d;
+border-radius:8px;
+padding:6px 10px;
+text-align:center;
+border:1px solid #00eaff35;
+min-width:90px;
+font-size:12px;
+}
+
+/* NUMBERS */
+.summary-card h2{
+font-family:'Segoe UI', Arial, sans-serif;
+font-size:18px;
+color:#00eaff;
+margin-bottom:3px;
+}
+
+/* LABEL */
+.summary-card p{
+opacity:.7;
+font-size:10px;
+letter-spacing:1px;
+}
+
+/* INCIDENT TYPES SECTION */
+.incident-types-section{
+    width:500px;              /* match incident-card */
+    margin:30px auto 0;       /* space below distribution */
+    padding:20px;
+    background:#071c36;
+    border-radius:18px;
+    border:1px solid rgba(0,234,255,0.25);
+}
+
+/* VERY SMALL GRID BACKGROUND */
+.incident-types-section::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(0,234,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,234,255,0.035) 1px, transparent 1px);
+    background-size:5px 5px;   /* smaller */
+    pointer-events:none;
+}
+
+/* CONTENT ABOVE GRID */
+.incident-types-wrapper,
+.incident-types-title,
+.incident-back-btn{
+    position:relative;
+    z-index:2;
+}
+
+/* BACK BUTTON SMALL */
+.incident-back-btn{
+    display:inline-block;
+    margin-bottom:18px;
+    padding:5px 12px;
+    border-radius:6px;
+    border:1px solid #00eaff;
+    color:#00eaff;
+    text-decoration:none;
+    font-size:11px;
+    letter-spacing:1px;
+    transition:0.3s ease;
+}
+
+.incident-back-btn:hover{
+    background:#00eaff;
+    color:#000;
+}
+
+ 
+
+/* Layout inside */
+.incident-types-wrapper{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+/* Smaller donut */
+.donut-container{
+    width:170px;
+    height:170px;
+}
+
+/* Smaller legend */
+.incident-types-grid{
+    width:220px;
+}
+
+
+
+/* WEATHER & SHIFT CARDS BIGGER */
+.weather-shift-row{
+    display:flex;
+    gap:25px;
+}
+
+.mini-card{
+    flex:1;
+    padding:25px 30px;      /* increased padding */
+    min-height:180px;       /* taller card */
+    border-radius:18px;
+}
+
+/* Bigger Weather Text */
+.mini-card h4{
+    font-size:18px;
+    margin-bottom:15px;
+}
+
+.mini-temp{
+    font-size:38px;         /* bigger temperature */
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.mini-sub{
+    font-size:14px;
+    margin-bottom:10px;
+}
+
+.mini-info{
+    font-size:13px;
+    gap:20px;
+}
+ 
+
+/* TYPE CARD SMALL */
+.type-card{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 12px;   /* reduced */
+    background:rgba(255,255,255,0.05);
+    border-radius:8px;
+    border:1px solid rgba(0,234,255,0.15);
+    font-size:12px;     /* smaller text */
+    transition:.3s;
+}
+
+.type-card:hover{
+    border-color:#00eaff;
+}
+
+/* LEFT SIDE */
+.left{
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+/* DOT SMALL */
+/* BASE DOT */
+.dot{
+width:7px;
+height:7px;
+border-radius:50%;
+display:inline-block;
+margin-right:6px;
+}
+
+/* INCIDENT TYPE COLORS WITH GLOW */
+
+.dot.traffic{
+background:#00d4ff;
+box-shadow:0 0 6px #00d4ff,0 0 10px #00d4ff;
+}
+
+.dot.accident{
+background:#ff1f4b;
+box-shadow:0 0 6px #ff1f4b,0 0 10px #ff1f4b;
+}
+
+.dot.fire{
+background:#ff6a00;
+box-shadow:0 0 6px #ff6a00,0 0 10px #ff6a00;
+}
+
+.dot.security{
+background:#d400ff;
+box-shadow:0 0 6px #d400ff,0 0 10px #d400ff;
+}
+
+.dot.utilities{
+background:#ffd400;
+box-shadow:0 0 6px #ffd400,0 0 10px #ffd400;
+}
+
+.dot.infra{
+background:#00ff88;
+box-shadow:0 0 6px #00ff88,0 0 10px #00ff88;
+}
+
+.dot.civic{
+background:#4fc3f7;
+box-shadow:0 0 6px #4fc3f7,0 0 10px #4fc3f7;
+}
+
+.count{
+    color:#00eaff;
+    font-weight:600;
+}
+
+.percent{
+    opacity:.6;
+    font-size:11px;
+    margin-left:4px;
+}
+
+
+
+
+/* ROW BELOW INCIDENT DISTRIBUTION */
+.weather-shift-row{
+    display:flex;
+    gap:20px;
+    justify-content:center;
+    margin-top:30px;
+}
+
+/* MINI CARD */
+.mini-card{
+    width:340px;
+    padding:15px 18px;
+    background:#071c36;
+    border-radius:14px;
+    border:1px solid rgba(0,234,255,0.25);
+    position:relative;
+    overflow:hidden;
+}
+
+/* SMALL GRID BACKGROUND */
+.mini-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(0,234,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,234,255,0.04) 1px, transparent 1px);
+    background-size:5px 5px;
+    pointer-events:none;
+}
+
+/* Keep content above grid */
+.mini-card *{
+    position:relative;
+    z-index:2;
+}
+
+/* TITLE */
+.mini-card h3{
+    font-family:'Orbitron';
+    font-size:14px;
+    color:#00eaff;
+    margin-bottom:12px;
+}
+
+/* WEATHER */
+.mini-temp{
+    font-size:28px;
+    color:#00eaff;
+    font-weight:700;
+}
+
+.mini-sub{
+    font-size:12px;
+    opacity:.8;
+    margin-bottom:10px;
+}
+
+.mini-info{
+    font-size:11px;
+    display:flex;
+    justify-content:space-between;
+    opacity:.7;
+}
+
+/* SHIFT */
+/* SHIFT CARD */
+.shift-card{
+    padding:25px;
+}
+
+/* GRID INSIDE SHIFT */
+.shift-grid{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+/* SHIFT BOX */
+.shift-box{
+    padding:15px 18px;
+    border-radius:12px;
+    border:1px solid rgba(0,234,255,0.25);
+    background:rgba(0,234,255,0.04);
+}
+
+/* HEADER ROW */
+.shift-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:14px;
+    margin-bottom:8px;
+}
+
+/* TIME */
+.shift-time{
+    font-family:'Orbitron';
+    font-size:16px;
+    color:#00eaff;
+}
+
+/* STATUS BUTTONS */
+.status{
+    padding:4px 10px;
+    border-radius:6px;
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:1px;
+}
+
+.active{
+    background:##FFC107;
+    color:#001a0f;
+}
+
+.upcoming{
+    background:#ffcc00;
+    color:#FFC107;
+}
+
+
+/* RIGHT SIDE POPUP */
+.shift-panel{
+    position:fixed;
+    top:0;
+    right:-420px;
+    width:400px;
+    height:100vh;
+    background:#071c36;
+    border-left:2px solid #00eaff40;
+    box-shadow:-5px 0 25px rgba(0,234,255,0.2);
+    transition:0.4s ease;
+    z-index:9999;
+    display:flex;
+    flex-direction:column;
+}
+
+.shift-panel.active{
+    right:0;
+}
+
+.shift-panel-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px;
+    border-bottom:1px solid rgba(0,234,255,0.2);
+    color:#00eaff;
+    font-family:'Orbitron';
+}
+
+.shift-panel-body{
+    padding:20px;
+    overflow-y:auto;
+}
+
+.close-btn{
+    cursor:pointer;
+    font-size:18px;
+}
+
+/* SHIFT GRID */
+.shift-grid{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+/* SHIFT BOX */
+.shift-box{
+    padding:16px 18px;
+    border-radius:12px;
+    border:1px solid rgba(0,234,255,0.25);
+    background:rgba(0,234,255,0.05);
+    transition:.3s;
+}
+
+/* Hover effect */
+.shift-box:hover{
+    border-color:#00eaff;
+    box-shadow:0 0 12px rgba(0,234,255,0.3);
+}
+
+/* HEADER ROW */
+.shift-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:14px;
+    margin-bottom:8px;
+    font-weight:600;
+}
+
+/* SHIFT LABEL */
+.shift-header span{
+    color:#00eaff;
+    font-family:'Orbitron',sans-serif;
+    letter-spacing:1px;
+}
+
+/* ACTIVE BUTTON */
+.shift-header button{
+    padding:5px 12px;
+    border-radius:6px;
+    border:none;
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+    background:#00c853;
+    color:#001a0f;
+    letter-spacing:1px;
+    transition:.3s;
+}
+
+/* ACTIVE BUTTON HOVER */
+.shift-header button:hover{
+    background:#00e676;
+    box-shadow:0 0 10px #00e676;
+}
+
+/* SHIFT TIME TEXT */
+.shift-time{
+    font-size:13px;
+    color:#bfefff;
+    opacity:.9;
+}
+
+/* LEADERS */
+
+
+.section-title{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:16px;
+
+font-family:'Orbitron',sans-serif;
+font-size:34px;
+letter-spacing:3px;
+color:#00eaff;
+
+margin:60px 0 40px;
+}
+
+/* left and right borders */
+
+.section-title::before,
+.section-title::after{
+content:"";
+width:100px;
+height:3px;
+border-radius:3px;
+
+/* moving glow */
+background:linear-gradient(
+90deg,
+transparent,
+#00eaff,
+#ffffff,
+#00eaff,
+transparent
+);
+
+background-size:200% 100%;
+animation:moveBorder 2.5s linear infinite;
+}
+
+/* animation */
+
+@keyframes moveBorder{
+0%{
+background-position:-200% 0;
+}
+100%{
+background-position:200% 0;
+}
+}
+
+
+.leaders-row{
+display:flex;
+justify-content:center;
+gap:50px;
+padding:0 80px 80px;
+flex-wrap:nowrap;
+overflow-x:auto;
+}
+
+.leader-card{
+background:rgba(10,31,61,0.85);
+padding:28px 25px;
+border-radius:18px;
+text-align:center;
+
+border:1px solid rgba(0,234,255,0.35);
+min-width:240px;
+
+transition:box-shadow .35s ease;
+
+box-shadow:
+0 0 8px rgba(0,234,255,0.15),
+0 0 20px rgba(0,234,255,0.08);
+}
+
+/* glow only, no movement */
+
+.leader-card:hover{
+box-shadow:
+0 0 18px rgba(0,234,255,0.6),
+0 0 40px rgba(0,234,255,0.25);
+}
+
+.leader-card img{
+width:120px;
+height:120px;
+border-radius:50%;
+border:5px solid #00eaff;
+margin-bottom:12px;
+object-fit:cover;
+
+/* light ring glow */
+box-shadow:
+0 0 8px #00eaff,
+0 0 18px rgba(0,234,255,0.6),
+0 0 30px rgba(0,234,255,0.4);
+}
+
+/* subtle pulse glow animation */
+
+.leader-card img{
+width:120px;
+height:120px;
+border-radius:50%;
+border:4px solid #00eaff;   /* thinner ring */
+margin-bottom:12px;
+object-fit:cover;
+
+/* softer glow */
+box-shadow:
+0 0 4px #00eaff,
+0 0 10px rgba(0,234,255,0.35);
+}
+
+/* subtle pulse */
+
+.leader-card img{
+animation:ringGlow 4s ease-in-out infinite;
+}
+
+@keyframes ringGlow{
+0%{
+box-shadow:
+0 0 4px #00eaff,
+0 0 10px rgba(0,234,255,0.35);
+}
+
+50%{
+box-shadow:
+0 0 6px #00eaff,
+0 0 14px rgba(0,234,255,0.45);
+}
+
+100%{
+box-shadow:
+0 0 4px #00eaff,
+0 0 10px rgba(0,234,255,0.35);
+}
+}
+.leader-card h4{
+font-family:'Orbitron',sans-serif;
+font-size:16px;
+color:#7df3ff;
+margin-bottom:6px;
+}
+
+.leader-card p{
+opacity:.8;
+font-size:13px;
+color:#c7e6ff;
+}
+
+
+
+/* ACCESS PORTAL BUTTON */
+/* CENTER ACCESS PORTAL BUTTON */
+
+.portal-center{
+display:flex;
+justify-content:center;
+align-items:center;
+margin:40px 0;
+}
+
+/* BUTTON STYLE */
+
+.access-portal-btn{
+padding:16px 38px;
+font-size:18px;
+font-weight:600;
+letter-spacing:2px;
+border-radius:12px;
+border:2px solid #00eaff;
+background:transparent;
+color:#00eaff;
+cursor:pointer;
+transition:0.3s ease;
+font-family:'Orbitron',sans-serif;
+}
+
+.access-portal-btn i{
+margin-right:10px;
+}
+
+.access-portal-btn:hover{
+background:#00eaff;
+color:#001a2b;
+box-shadow:0 0 18px #00eaff,0 0 50px rgba(0,234,255,0.6);
+transform:translateY(-2px);
+}
+
+
+
+/* FOOTER */
+/* FOOTER WRAPPER */
+footer{
+background:linear-gradient(135deg,#0a1228,#050b1a);
+border-top:2px solid rgba(0,217,255,0.3);
+padding:40px 30px 20px;
+margin-top:60px;
+}
+
+/* footer layout */
+.footer-content{
+max-width:1100px;
+margin:auto;
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+gap:60px;
+flex-wrap:wrap; /* prevents overflow */
+}
+
+/* each column */
+.footer-section{
+flex:1;
+min-width:220px; /* keeps layout stable */
+}
+
+/* title */
+.footer-section h3{
+font-family:'Orbitron',sans-serif;
+font-size:18px;
+color:#00eaff;
+margin-bottom:18px;
+letter-spacing:2px;
+}
+
+/* contact items */
+.contact-item{
+display:flex;
+align-items:flex-start;
+gap:12px;
+margin-bottom:14px;
+font-size:15px;
+color:#b5c7e0;
+line-height:1.4;
+}
+
+/* icon fixed position */
+.contact-icon{
+min-width:22px;
+display:flex;
+align-items:center;
+justify-content:center;
+color:#00eaff;
+margin-top:3px;
+}
+
+/* text block */
+.contact-item div:last-child{
+flex:1;
+}
+
+/* bold labels */
+.contact-item strong{
+color:#ffffff;
+font-weight:600;
+}
+
+/* social links */
+.social-links{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.social-links a{
+display:flex;
+align-items:center;
+gap:10px;
+padding:8px 12px;
+border-radius:8px;
+background:rgba(0,217,255,0.05);
+border:1px solid rgba(0,217,255,0.2);
+text-decoration:none;
+color:#b5c7e0;
+transition:0.3s;
+}
+
+.social-links a:hover{
+background:rgba(0,217,255,0.15);
+border-color:#00eaff;
+color:#00eaff;
+}
+
+/* footer bottom */
+.footer-bottom{
+border-top:1px solid rgba(0,217,255,0.2);
+margin-top:25px;
+padding-top:18px;
+text-align:center;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:6px;
+}
+
+.footer-bottom p:first-child{
+font-size:13px;
+color:#c6d8f5;
+letter-spacing:0.5px;
+text-shadow:0 0 6px rgba(0,217,255,0.2);
+}
+
+.footer-bottom p:last-child{
+font-size:12px;
+color:#8ea9d6;
+opacity:0.8;
+}
+
+/* mobile */
+@media(max-width:768px){
+.footer-content{
+flex-direction:column;
+gap:30px;
+text-align:left;
+}
+
+.footer-bottom p:first-child{
+font-size:12px;
+}
+
+.footer-bottom p:last-child{
+font-size:11px;
+}
+}
+
+
+body{
+margin:0;
+font-family:Segoe UI;
+background:linear-gradient(135deg,#0a2b63,#0c3c7a,#0b2e66);
+color:white;
+text-align:center;
+}
+
+.title{
+font-size:42px;
+letter-spacing:4px;
+margin-top:40px;
+color:#00eaff;
+text-shadow:0 0 12px #00eaff;
+}
+
+/* SLIDER */
+
+.slider{
+position:relative;
+width:900px;
+margin:40px auto;
+overflow:hidden;
+}
+
+/* SLIDES */
+
+.slides{
+display:flex;
+transition:transform .6s ease;
+}
+
+.slide{
+min-width:900px;
+height:260px;
+background:rgba(0,0,0,.35);
+border-radius:20px;
+border:1px solid rgba(0,255,255,.3);
+backdrop-filter:blur(6px);
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+box-shadow:0 0 20px rgba(0,255,255,.25);
+}
+
+.slide h1{
+font-size:60px;
+margin:0;
+color:#00eaff;
+}
+
+.slide h2{
+margin:10px 0;
+font-weight:500;
+}
+
+.slide p{
+opacity:.8;
+font-size:14px;
+}
+
+/* ARROWS */
+
+.arrow{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+font-size:28px;
+cursor:pointer;
+color:#00eaff;
+user-select:none;
+}
+
+.arrow:hover{
+text-shadow:0 0 10px #00eaff;
+}
+
+.left{
+left:-40px;
+}
+
+.right{
+right:-40px;
+}
+
+/* DOTS */
+
+/* DOT CONTAINER */
+
+ 
+.dots{
+margin-top:20px;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+/* base dot */
+.dot{
+height:10px;
+width:10px;
+margin:6px;
+border-radius:50%;
+background:#00eaff55;
+animation:glowDot 2.5s infinite;
+}
+
+/* sequential glow */
+.dot:nth-child(1){animation-delay:0s;}
+.dot:nth-child(2){animation-delay:0.6s;}
+.dot:nth-child(3){animation-delay:1.2s;}
+.dot:nth-child(4){animation-delay:1.8s;}
+
+@keyframes glowDot{
+
+0%{
+background:#00eaff55;
+box-shadow:none;
+}
+
+50%{
+background:#00eaff;
+box-shadow:0 0 10px #00eaff,0 0 20px #00eaff;
+}
+
+100%{
+background:#00eaff55;
+box-shadow:none;
+}
+
+}
+
+
+
+/* container center */
+.container{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:50px;
+flex-wrap:wrap;
+padding:80px 0;   /* top and bottom space */
+}
+
+/* bigger cards */
+.card{
+width:280px;
+height:250px;
+background:#0b2447;
+border-radius:16px;
+padding:30px 20px;
+text-align:center;
+border:1px solid #00eaff40;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-8px);
+box-shadow:0 0 25px #00eaff66;
+}
+
+/* icon */
+.icon{
+font-size:40px;
+margin-bottom:18px;
+}
+
+/* colors */
+.rtcc{color:#00eaff;}
+.maoc{color:#33d1ff;}
+.disaster{color:#ff4d6d;}
+.social{color:#00ff9c;}
+
+.title{
+color:#00eaff;
+font-size:16px;
+font-weight:600;
+margin-bottom:10px;
+}
+
+.desc{
+color:#9fb4cc;
+font-size:13px;
+line-height:1.1;
+}
+
+</style>
+</head>
+
+<body>
+
+<section class="hero">
+<h1>TGICCC</h1>
+<h2>TELANGANA INTEGRATED COMMAND AND CONTROL CENTRE</h2>
+<div class="scrolling-text-container">
+<div class="scrolling-text">
+The nerve centre of smart governance — enabling city-wide surveillance, emergency response, and intelligent coordination.</div>
+</div>
+</section>
+
+<div class="hero-logos">
+    <!-- Telangana State Emblem -->
+    <img src="\govt_logo.png">
+
+    <!-- Telangana Police Badge -->
+    <img src="\police_logo.png">
+</div>
+
+<div class="stats">
+<div class="card"><i class="fa-solid fa-chart-column"></i><h3>3</h3><p>Incidents Monitored</p></div>
+<div class="card"><i class="fa-solid fa-video"></i><h3>10,178</h3><p>Surveillance Cameras</p></div>
+<div class="card"><i class="fa-solid fa-shield-heart"></i><h3>4</h3><p>Emergency Responses</p></div>
+<div class="card"><i class="fa-solid fa-arrow-trend-up"></i><h3>80%</h3><p>Active Cameras</p></div>
+</div>
+
+<div class="map-incidents-container">
+
+    <!-- ================= LEFT SIDE (MAP) ================= -->
+    <div class="city-map-section">
+
+        <img src="\TG_MAP.jpg">
+
+        <!-- MAP OVERLAY -->
+<svg class="map-overlay" viewBox="0 0 800 900">
+
+    <!-- GREEN ACTIVE -->
+    <g class="pulse active" transform="translate(400,140)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+
+     <g class="pulse active" transform="translate(550,140)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+
+    <g class="pulse active" transform="translate(200,470)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+
+    <g class="pulse active" transform="translate(350,30)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+
+     <g class="pulse active" transform="translate(450,10)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+
+    <!-- YELLOW ALERT -->
+    <g class="pulse alert" transform="translate(420,330)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+    
+
+     <!-- YELLOW ALERT -->
+    <g class="pulse alert" transform="translate(200,100)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+    
+   <g class="pulse alert" transform="translate(120,330)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g> 
+
+  <g class="pulse alert" transform="translate(500,130)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+
+    <!-- RED CRITICAL -->
+    <g class="pulse critical" transform="translate(410,240)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+   
+     <g class="pulse critical" transform="translate(410,90)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+ 
+    <g class="pulse critical" transform="translate(310,240)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+
+  <g class="pulse critical_h" transform="translate(300,340)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+
+
+  <g class="pulse critical_t" transform="translate(200,240)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+
+ <g class="pulse critical_o" transform="translate(250,200)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+
+<g class="pulse active_t" transform="translate(530,240)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+
+<g class="pulse active_t" transform="translate(530,340)">
+        <circle class="core" r="7"/>
+        <circle class="ring"/>
+    </g>
+
+</svg>
+
+    
+        <!-- DISTRICT STATS -->
+        <div class="district-stats-wrapper">
+            <div class="district-stats-grid">
+                <div class="district-card cyan">
+                    <h2>18</h2>
+                    <p>ACTIVE DISTRICTS</p>
+                </div>
+                <div class="district-card cyan">
+                    <h2>2,440</h2>
+                    <p>TOTAL CAMERAS</p>
+                </div>
+                <div class="district-card green">
+                    <h2>15</h2>
+                    <p>GREEN STATUS</p>
+                </div>
+                <div class="district-card yellow">
+                    <h2>2</h2>
+                    <p>ALERTS</p>
+                </div>
+                <div class="district-card red full-width">
+                    <h2>1</h2>
+                    <p>CRITICAL</p>
+                </div>
+
+            </div>
+        </div>
+<div class="district-legend">
+    
+    <div class="legend-item">
+        <span class="legend-dot active-dot"></span>
+        ACTIVE
+    </div>
+
+    <div class="legend-item">
+        <span class="legend-dot alert-dot"></span>
+        ALERT
+    </div>
+
+    <div class="legend-item">
+        <span class="legend-dot critical-dot"></span>
+        CRITICAL
+    </div>
+
+</div>
+
+    </div>
+
+
+
+
+
+
+
+    <!-- ================= RIGHT SIDE ================= -->
+    <div class="right-panel">
+
+        <!-- INCIDENT DISTRIBUTION -->
+        <div class="incident-section">
+<h6 class="incident-title">INCIDENT DISTRIBUTION</h6>
+
+<div class="incident-card">
+<canvas id="incidentChart"></canvas>
+
+<div class="summary-inside">
+
+<div class="summary-card">
+<h2 id="totalIncidentsCount">0</h2>
+<p>TOTAL INCIDENTS</p>
+</div>
+
+<div class="summary-card">
+<h2 id="highestDistrict">-</h2>
+<p>HIGHEST DISTRICT</p>
+</div>
+
+<div class="summary-card">
+<h2 id="avgDistrict">0</h2>
+<p>AVG PER DISTRICT</p>
+</div>
+
+</div>
+</div>
+</div>
+
+        <!-- INCIDENT TYPES -->
+
+
+        <div class="incident-types-section">
+    <h6 class="incident-title">INCIDENT TYPES</h6>
+
+    <div class="incident-types-wrapper">
+
+        <!-- LEFT SIDE DONUT -->
+        <div class="donut-container">
+            <canvas id="incidentTypeChart"></canvas>
+
+            <div class="donut-center">
+                <h3 id="totalIncidents">0</h3>
+                <span>TOTAL</span>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE BOXES -->
+        <div class="incident-types-grid">
+
+            <div class="type-card">
+                <div class="left">
+                    <span class="dot traffic"></span> Fire Emergency
+                </div>
+                <div class="right">
+                    <span class="count" id="trafficCount">0</span>
+                    <span class="percent" id="trafficPercent">0%</span>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="left">
+                    <span class="dot accident"></span> Medical Emergency
+                </div>
+                <div class="right">
+                    <span class="count" id="accidentCount">0</span>
+                    <span class="percent" id="accidentPercent">0%</span>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="left">
+                    <span class="dot fire"></span> Accident
+                </div>
+                <div class="right">
+                    <span class="count" id="fireCount">0</span>
+                    <span class="percent" id="firePercent">0%</span>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="left">
+                    <span class="dot security"></span> Public Disorder
+                </div>
+                <div class="right">
+                    <span class="count" id="securityCount">0</span>
+                    <span class="percent" id="securityPercent">0%</span>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="left">
+                    <span class="dot utilities"></span> Nature Disaster
+                </div>
+                <div class="right">
+                    <span class="count" id="utilitiesCount">0</span>
+                    <span class="percent" id="utilitiesPercent">0%</span>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="left">
+                    <span class="dot infra"></span> Infrastructure
+                </div>
+                <div class="right">
+                    <span class="count" id="infraCount">0</span>
+                    <span class="percent" id="infraPercent">0%</span>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="left">
+                    <span class="dot civic"></span> Other
+                </div>
+                <div class="right">
+                    <span class="count" id="civicCount">0</span>
+                    <span class="percent" id="civicPercent">0%</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+ <!-- WEATHER + SHIFT -->
+        <div class="weather-shift-row">
+
+            <div class="mini-card">
+                <h4>WEATHER</h4>
+                <div class="mini-temp">27°C</div>
+                <div class="mini-sub">Mostly Sunny</div>
+                <div class="mini-info">
+                    <span>💧 69%</span>
+                    <span>🌬 17 km/h</span>
+                </div>
+            </div>
+
+            <div class="mini-card shift-card">
+
+    <h4>SHIFT INFORMATION</h4>
+
+    <div class="shift-grid">
+
+        <div class="shift-box">
+            <div class="shift-header">
+            <span><h3>DAY SHIFT</h3></span>
+            <span><h6>click for details</h6></span>
+                <button type="button"
+        onclick="openShiftPage('day')">
+    ACTIVE
+</button>
+            </div>
+            <div class="shift-time">06:00 – 18:00</div>
+        </div>
+
+        <div class="shift-box">
+            <div class="shift-header">
+                <span><h3>NIGHT SHIFT</h3></span>
+            <span><h6>click for details</h6></span>
+                <button type="button"
+        onclick="openShiftPage('night')">
+    UPCOMING
+</button>
+            </div>
+            <div class="shift-time">18:00 – 06:00</div>
+        </div>
+
+    </div>
+</div>
+
+ 
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+ 
+
+<h2 class="section-title">OUR LEADERSHIP</h2>
+
+<div class="leaders-row">
+<div class="leader-card">
+<img src="\leader1.webp">
+<h4>Sri Anumula Revanth Reddy</h4>
+<p>Hon'ble Chief Minister</p>
+</div>
+
+<div class="leader-card">
+<img src="\leader2.png">
+<h4>Sri B. Shivadhar Reddy</h4>
+<p>DGP, Telangana</p>
+</div>
+
+<div class="leader-card">
+<img src="\leader3.png">
+<h4>Sri V.B. Kamalasan Reddy</h4>
+<p>Director, TGICCC</p>
+</div>
+</div>
+
+
+<h1 class="title">PROVEN IMPACT</h1>
+
+<div class="slider">
+
+<div class="arrow left" onclick="prevSlide()">❮</div>
+
+<div class="slides" id="slides">
+
+<div class="slide">
+<h1>99.9%</h1>
+<h2>System Uptime & Availability</h2>
+<p>Industry-leading operational reliability through redundant infrastructure</p>
+</div>
+
+<div class="slide">
+<h1>500 K+</h1>
+<h2>Incidents Successfully Resolved</h2>
+<p>Over half a million security incidents coordinated since deployment</p>
+</div>
+
+<div class="slide">
+<h1>2,500+</h1>
+<h2>Strategic Locations Monitored 24/7</h2>
+<p>Comprehensive surveillance network covering critical infrastructure state-wide</p>
+</div>
+
+<div class="slide">
+<h1>40%</h1>
+<h2>Faster Emergency Response Time</h2>
+<p>Advanced AI-powered dispatch reduces response times across Telangana</p>
+</div>
+
+
+
+</div>
+
+<div class="arrow right" onclick="nextSlide()">❯</div>
+
+</div>
+
+<div class="dots" id="dots"></div>
+
+<div class="container">
+
+<div class="card">
+<div class="icon rtcc"><i class="fa-solid fa-table-cells"></i></div>
+<div class="title">RTCC</div>
+<div class="desc">
+Real Time Convergence Centre – <br>
+Nerve centre of Surveillance operations
+</div>
+</div>
+
+<div class="card">
+<div class="icon maoc"><i class="fa-solid fa-circle-nodes"></i></div>
+<div class="title">MAOC</div>
+<div class="desc">
+Multi Agency Operations Center – <br>
+Coordinated response
+</div>
+</div>
+
+<div class="card">
+<div class="icon disaster"><i class="fa-solid fa-bell"></i></div>
+<div class="title">Disaster Management</div>
+<div class="desc">
+Emergency preparedness & crisis response
+</div>
+</div>
+
+<div class="card">
+<div class="icon social"><i class="fa-solid fa-share-nodes"></i></div>
+<div class="title">Social Media Monitoring</div>
+<div class="desc">
+Real-time public sentiment analysis
+</div>
+</div>
+
+</div>
+
+
+
+
+<div class="portal-center">
+    <button class="access-portal-btn" onclick="openPortal()">
+         ACCESS PORTAL
+    </button>
+</div>
+
+
+
+
+<!-- FOOTER -->
+ <!-- Footer -->
+    <footer id="mainFooter">
+        <div class="footer-content">
+            <!-- Resources -->
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#" onclick="openFooterModal('manual'); return false;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px;"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>User Manual</a></li>
+                    <li><a href="#" onclick="openFooterModal('privacy'); return false;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Privacy Policy</a></li>
+                    <li><a href="#" onclick="openFooterModal('terms'); return false;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Terms of Service</a></li>
+                    <li><a href="#" onclick="openFooterModal('faq'); return false;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:3px;"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>FAQs</a></li>
+                </ul>
+            </div>
+
+<!-- Contact Us -->
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <div class="contact-item">
+                    <div class="contact-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+                    <div>
+                        <strong>Address:</strong><br>
+                        Integrated Command and Control Centre<br>
+                        Banjara Hills, Hyderabad<br>
+                        Telangana - 500034, India
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></div>
+                    <div>
+                        <strong>Phone:</strong><br>
+                        +91871267400<br>
+                        Emergency: 112
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg></div>
+                    <div>
+                        <strong>Email:</strong><br>
+                        <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b6dfd8d0d9f6c2d1dfd5d5d598d1d9c098dfd8"><span class="__cf_email__" data-cfemail="6e1a091e0102070d0b401a09070d0d0d2e09030f0702400d0103"><span class="__cf_email__" data-cfemail="443023342b282d27216a30232d272727042329252d286a272b29"><span class="__cf_email__" data-cfemail="dda9baadb2b1b4beb8f3a9bab4bebebe9dbab0bcb4b1f3beb2b0"><span class="__cf_email__" data-cfemail="413526312e2d2822246f35262822222201262c20282d6f222e2c">[email&#160;protected]</span></span></span></span></a><br>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Follow Us -->
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="https://www.youtube.com/@TGiCCC" target="_blank" rel="noopener noreferrer" title="YouTube">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                        YouTube
+                    </a>
+                    <a href="https://www.facebook.com/profile.php?id=61561553035916" target="_blank" rel="noopener noreferrer" title="Facebook">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                        Facebook
+                    </a>
+                    <a href="https://x.com/tgiccc_tg" target="_blank" rel="noopener noreferrer" title="X (Twitter)">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                        X
+                    </a>
+                    <a href="https://www.instagram.com/tgiccc_tg/?hl=en" target="_blank" rel="noopener noreferrer" title="Instagram">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                        Instagram
+                    </a>
+                </div>
+    </div>
+   </div>
+         <div class="footer-bottom">
+            <p>© 2024 TGiCCC — Telangana Integrated Command & Control Centre. All rights reserved.</p>
+            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.4rem;">Government of Telangana | Telangana State Police | Banjara Hills, Hyderabad — 500034</p>
+        </div>
+    </footer>
+
+    <!-- ── Footer Info Modals ──────────────────────────────────── -->
+    <div id="footerModalOverlay" onclick="closeFooterModal()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); z-index:10000; align-items:center; justify-content:center;">
+        <div onclick="event.stopPropagation()" style="background:linear-gradient(135deg,rgba(10,14,39,0.98),rgba(5,10,25,0.99)); border:1px solid rgba(0,217,255,0.3); border-radius:16px; width:min(680px,92vw); max-height:80vh; overflow-y:auto; padding:2rem; position:relative; box-shadow:0 0 60px rgba(0,217,255,0.15);">
+            <button onclick="closeFooterModal()" style="position:absolute; top:1rem; right:1rem; background:rgba(0,217,255,0.1); border:1px solid rgba(0,217,255,0.3); border-radius:8px; color:var(--accent); width:32px; height:32px; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center;">✕</button>
+            <div id="footerModalContent"></div>
+        </div>
+    </div>
+
+ 
+<script>
+
+// INCIDENT TYPE DONUT
+
+
+async function loadIncidentTypes(){
+
+try{
+
+const response = await fetch("http://localhost:5000/api/incident-types");
+const data = await response.json();
+
+let total = 0;
+
+data.forEach(i=>{
+total += Number(i.total);
+});
+
+/* TOTAL IN DONUT CENTER */
+
+document.getElementById("totalIncidents").innerText = total;
+
+/* CATEGORY MAPPING */
+
+const typeMap = {
+"Fire Emergency":"traffic",
+"Medical Emergency":"accident",
+"Accident":"fire",
+"Public Disorder":"security",
+"Nature Disaster":"utilities",
+"Infrastructure":"infra",
+"Other":"civic"
+};
+
+/* UPDATE COUNTS + PERCENT */
+
+data.forEach(i=>{
+
+let key = typeMap[i.incident_type];
+
+if(!key) return;
+
+let count = document.getElementById(key+"Count");
+let percent = document.getElementById(key+"Percent");
+
+if(count){
+count.innerText = i.total;
+}
+
+if(percent){
+percent.innerText = ((i.total/total)*100).toFixed(0)+"%";
+}
+
+});
+
+/* DONUT CHART */
+
+const labels = data.map(x=>x.incident_type);
+const values = data.map(x=>x.total);
+
+new Chart(document.getElementById("incidentTypeChart"),{
+
+type:"doughnut",
+
+data:{
+labels:labels,
+datasets:[{
+data:values,
+backgroundColor:[
+"#00d4ff",   // Fire Emergency
+"#ff1f4b",   // Medical
+"#ff6a00",   // Accident
+"#d400ff",   // Public Disorder
+"#ffd400",   // Nature Disaster
+"#00ff88",   // Infrastructure
+"#4fc3f7"    // Other
+],
+borderWidth:0
+}]
+},
+
+options:{
+cutout:"70%",
+plugins:{legend:{display:false}},
+responsive:true,
+maintainAspectRatio:false
+}
+
+});
+
+}catch(err){
+console.error("Error loading incidents:",err);
+}
+
+}
+
+document.addEventListener("DOMContentLoaded",loadIncidentTypes);
+
+
+// INCIDENT DISTRIBUTION BAR
+
+
+
+async function loadIncidentDistribution(){
+
+const res = await fetch("http://localhost:5000/api/incident-districts");
+const data = await res.json();
+
+const labels = data.map(d => d.district);
+const values = data.map(d => Number(d.total));
+
+/* ===== CALCULATIONS ===== */
+
+let totalIncidents = values.reduce((a,b)=>a+b,0);
+document.getElementById("totalIncidentsCount").innerText = totalIncidents;
+
+let maxIndex = values.indexOf(Math.max(...values));
+document.getElementById("highestDistrict").innerText = labels[maxIndex];
+
+let avg = Math.round(totalIncidents / labels.length);
+document.getElementById("avgDistrict").innerText = avg;
+
+/* ===== COLORS ===== */
+
+const districtColors = {
+
+"Hyderabad":"#ff2e63",      // red
+"Rangareddy":"#ffd400",     // yellow
+"Medchal":"#00ff88",        // green
+"Warangal":"#00eaff",       // cyan
+"Nalgonda":"#ff8800",       // orange
+"Karimnagar":"#9c27b0",     // purple
+"Khammam":"#3f51b5",        // indigo
+"Mahbubnagar":"#ff4081",    // pink
+"Suryapet":"#8bc34a",       // light green
+"Sangareddy":"#ff5722",     // deep orange
+"Yadadri":"#03a9f4",        // sky blue
+"Medak":"#cddc39",          // lime
+"Adilabad":"#795548",       // brown
+"Nagarkurnool":"#673ab7",   // violet
+"Jogulamba":"#009688",      // teal
+"Wanaparthy":"#ffc107"      // amber
+
+};
+const colors = labels.map(d => districtColors[d] || "#00eaff");
+
+/* ===== CHART ===== */
+
+new Chart(document.getElementById("incidentChart"),{
+
+type:"bar",
+
+data:{
+labels:labels,
+datasets:[{
+data:values,
+borderRadius:6,
+backgroundColor:colors
+}]
+},
+
+options:{
+responsive:true,
+maintainAspectRatio:false,
+plugins:{legend:{display:false}},
+scales:{
+x:{ticks:{color:"#fff",maxRotation:45,minRotation:45}},
+y:{
+beginAtZero:true,
+ticks:{color:"#00eaff",stepSize:20},
+grid:{color:"rgba(0,234,255,0.2)"}
+}
+}
+}
+
+});
+
+}
+
+document.addEventListener("DOMContentLoaded",loadIncidentDistribution);
+
+
+
+
+async function loadTotalIncidents(){
+
+try{
+
+const res = await fetch("http://localhost:5000/api/total-incidents");
+const data = await res.json();
+
+document.getElementById("totalIncidentsCount").innerText = data.total;
+
+}catch(err){
+console.error("Total incident load error:",err);
+}
+
+}
+
+document.addEventListener("DOMContentLoaded",loadTotalIncidents);
+
+ 
+function openShiftPage(type){
+    window.location.href = "/shift.html?type=" + type;
+}
+ 
+function openPortal(){
+window.location.href="/login.html";
+}
+
+let index=0;
+const slides=document.getElementById("slides");
+const total=slides.children.length;
+const dotsContainer=document.getElementById("dots");
+
+/* create dots */
+
+for(let i=0;i<total;i++){
+let dot=document.createElement("span");
+dot.classList.add("dot");
+if(i===0) dot.classList.add("active");
+
+dot.onclick=()=>goSlide(i);
+
+dotsContainer.appendChild(dot);
+}
+
+const dots=document.querySelectorAll(".dot");
+
+function updateSlider(){
+slides.style.transform=`translateX(-${index*900}px)`;
+
+dots.forEach(d=>d.classList.remove("active"));
+dots[index].classList.add("active");
+}
+
+function nextSlide(){
+index++;
+if(index>=total) index=0;
+updateSlider();
+}
+
+function prevSlide(){
+index--;
+if(index<0) index=total-1;
+updateSlider();
+}
+
+function goSlide(i){
+index=i;
+updateSlider();
+}
+
+/* auto animation */
+
+setInterval(nextSlide,4000);
+
+</script>
+
+</body>
+</html>

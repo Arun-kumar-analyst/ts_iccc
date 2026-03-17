@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TGICCC Profile</title>
+
+<style>
+
+body{
+font-family:Segoe UI;
+background:#0a2b63;
+color:white;
+text-align:center;
+padding-top:40px;
+}
+
+.close-btn{
+position:absolute;
+top:20px;
+right:30px;
+font-size:28px;
+color:red;
+cursor:pointer;
+}
+
+.title{
+font-size:30px;
+color:#00eaff;
+margin-bottom:20px;
+}
+
+.profile-card{
+width:350px;
+margin:auto;
+background:#071c36;
+padding:25px;
+border-radius:10px;
+border:1px solid #00eaff40;
+text-align:left;
+}
+
+.profile-item{
+margin-bottom:10px;
+}
+
+span{
+color:#00eaff;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="close-btn" onclick="logout()">✖</div>
+
+<h1 class="title">
+TELANGANA INTEGRATED COMMAND AND CONTROL CENTRE
+</h1>
+
+<div class="profile-card">
+
+<div class="profile-item">
+Employee ID: <span id="empid"></span>
+</div>
+
+<div class="profile-item">
+Name: <span id="name"></span>
+</div>
+
+<div class="profile-item">
+Email: <span id="email"></span>
+</div>
+
+<div class="profile-item">
+Phone: <span id="phone"></span>
+</div>
+
+<div class="profile-item">
+Department: <span id="dept"></span>
+</div>
+
+</div>
+
+<script>
+
+async function loadUser(){
+
+const empId = localStorage.getItem("employee_id");
+
+if(!empId){
+alert("User not logged in");
+window.location.href="login.html";
+return;
+}
+
+const res = await fetch("http://localhost:5000/api/user/"+empId);
+const user = await res.json();
+
+document.getElementById("empid").innerText = user.employee_id;
+document.getElementById("name").innerText = user.name;
+document.getElementById("email").innerText = user.email;
+document.getElementById("phone").innerText = user.phone;
+document.getElementById("dept").innerText = user.department;
+
+}
+
+function logout(){
+localStorage.removeItem("employee_id");
+window.location.href="login.html";
+}
+
+loadUser();
+
+</script>
+
+</body>
+</html>

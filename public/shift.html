@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Shift Management</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI';
+background:linear-gradient(135deg,#061c3b,#0a3f6d);
+color:white;
+}
+
+.container{
+padding:40px;
+max-width:900px;
+margin:auto;
+}
+
+.form-box{
+background:#081a2f;
+padding:25px;
+border-radius:14px;
+border:1px solid rgba(0,234,255,0.3);
+margin-bottom:30px;
+position:relative;
+}
+
+.close-form{
+position:absolute;
+top:10px;
+right:12px;
+width:32px;
+height:32px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+font-size:18px;
+font-weight:bold;
+color:white;
+background:#ff2d2d;
+box-shadow:0 0 10px #ff2d2d,0 0 20px #ff2d2d;
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin-bottom:12px;
+border-radius:6px;
+border:1px solid rgba(0,234,255,0.3);
+background:#0b223c;
+color:white;
+}
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-weight:600;
+margin-right:10px;
+}
+
+.save-btn{
+background:#00eaff;
+color:#00121f;
+}
+
+.details-btn{
+background:#00c853;
+color:#001a0f;
+}
+
+.history-btn{
+background:#ff9800;
+color:#00121f;
+}
+
+/* POPUP */
+
+.popup-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+display:none;
+align-items:center;
+justify-content:center;
+}
+
+/* normal popup */
+
+.popup{
+width:420px;
+background:#081a2f;
+border-radius:14px;
+border:1px solid rgba(0,234,255,0.4);
+padding:20px;
+position:relative;
+max-height:500px;
+overflow-y:auto;
+}
+
+/* history popup */
+
+.history-popup{
+width:700px;
+background:#081a2f;
+border-radius:14px;
+border:1px solid rgba(0,234,255,0.4);
+padding:20px;
+position:relative;
+max-height:550px;
+overflow-y:auto;
+}
+
+.close-popup{
+position:absolute;
+top:10px;
+right:12px;
+width:30px;
+height:30px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+font-size:16px;
+font-weight:bold;
+color:white;
+background:#ff2d2d;
+}
+
+.popup-header h3{
+font-family:'Orbitron';
+font-size:14px;
+color:#00eaff;
+margin-bottom:15px;
+}
+
+/* cards */
+
+.incharge-card{
+background:#0b223c;
+border-radius:10px;
+padding:15px;
+display:flex;
+align-items:center;
+margin-bottom:20px;
+}
+
+.ic-circle{
+width:45px;
+height:45px;
+border-radius:50%;
+background:#1da1f2;
+display:flex;
+align-items:center;
+justify-content:center;
+margin-right:12px;
+font-weight:bold;
+}
+
+.badge{
+background:#00c853;
+padding:3px 8px;
+border-radius:4px;
+font-size:11px;
+}
+
+.staff-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.staff-box{
+background:#0b223c;
+border-radius:8px;
+padding:10px;
+font-size:13px;
+}
+
+.dot{
+height:8px;
+width:8px;
+background:#00eaff;
+border-radius:50%;
+display:inline-block;
+margin-right:6px;
+}
+
+/* history cards */
+
+.history-card{
+background:#0b223c;
+border-radius:10px;
+padding:14px;
+margin-bottom:12px;
+border-left:4px solid #00eaff;
+}
+
+.history-staff{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:8px;
+margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="form-box">
+
+<div class="close-form" onclick="goBack()">✕</div>
+
+<h2>Add Shift</h2>
+
+<select id="shift_type">
+<option value="Day">Day</option>
+<option value="Night">Night</option>
+</select>
+
+<input id="shift_name" placeholder="Shift Name">
+
+<label>Start Time</label>
+<input type="time" id="start_time">
+
+<label>End Time</label>
+<input type="time" id="end_time">
+
+<input id="incharge_name" placeholder="Incharge Name">
+
+<input type="tel"
+id="phone_no"
+placeholder="Phone Number"
+maxlength="10"
+oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"
+>
+
+<input id="extension_no" placeholder="Extension Number">
+
+<input type="number" id="total_staff" placeholder="Total Staff">
+
+<input id="staff_names" placeholder="Staff Names (comma separated)">
+
+<input id="place_name" placeholder="Place Names (comma separated)">
+
+<input id="emergency_contact" placeholder="Emergency Contact">
+
+<input type="number" id="vehicles_deployed" placeholder="Vehicles Deployed">
+
+<input type="number" id="active_cases" placeholder="Active Cases">
+
+<button class="save-btn" onclick="saveShift()">Save Shift</button>
+<button class="details-btn" onclick="loadShift()">Shift Details</button>
+<button class="history-btn" onclick="loadHistory()">Shift History</button>
+
+</div>
+
+</div>
+
+<!-- CURRENT SHIFT POPUP -->
+
+<div class="popup-overlay" id="popup">
+
+<div class="popup">
+
+<div class="close-popup" onclick="closePopup()">✕</div>
+
+<div class="popup-header">
+<h3 id="shiftTitle">SHIFT PERSONNEL</h3>
+</div>
+
+<div id="inchargeCard"></div>
+
+<div id="staffGrid" class="staff-grid"></div>
+
+</div>
+
+</div>
+
+<!-- HISTORY POPUP -->
+
+<div class="popup-overlay" id="historyPopup">
+
+<div class="history-popup">
+
+<div class="close-popup" onclick="closeHistory()">✕</div>
+
+<div class="popup-header">
+<h3>SHIFT HISTORY</h3>
+</div>
+
+<div id="historyList"></div>
+
+</div>
+
+</div>
+
+<script>
+
+function goBack(){
+window.location.href="index.html";
+}
+
+async function saveShift(){
+
+const data={
+shift_type:shift_type.value,
+shift_name:shift_name.value,
+start_time:start_time.value,
+end_time:end_time.value,
+incharge_name:incharge_name.value,
+phone_no:phone_no.value,
+extension_no:extension_no.value,
+total_staff:total_staff.value,
+staff_names:staff_names.value,
+place_name:place_name.value,
+emergency_contact:emergency_contact.value,
+vehicles_deployed:vehicles_deployed.value,
+active_cases:active_cases.value
+};
+
+const res=await fetch("/api/shift",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(data)
+});
+
+const result=await res.json();
+
+alert(result.message || "Shift Saved");
+
+}
+
+/* CURRENT SHIFT */
+
+async function loadShift(){
+
+popup.style.display="flex";
+
+const res=await fetch("/api/shift/current");
+
+const data=await res.json();
+
+shiftTitle.innerText=data.shift_name+" – PERSONNEL";
+
+inchargeCard.innerHTML=`
+<div class="incharge-card">
+<div class="ic-circle">IC</div>
+<div style="flex:1">
+<b>${data.incharge_name}</b>
+<br>
+<span style="font-size:12px;color:#00eaff;">SHIFT INCHARGE</span>
+<br>
+<span style="font-size:12px;color:#aaa;">
+📞 ${data.phone_no} | Ext ${data.extension_no}
+</span>
+</div>
+<div class="badge">INCHARGE</div>
+</div>
+`;
+
+let staff=data.staff_names.split(",");
+let places=data.place_name.split(",");
+
+let grid="";
+
+staff.forEach((name,index)=>{
+
+let place=places[index] ? places[index].trim() : "";
+
+grid+=`
+<div class="staff-box">
+<span class="dot"></span> ${name.trim()}
+<br>
+<span style="font-size:11px;color:#9fdfff;">
+${place}
+</span>
+</div>
+`;
+
+});
+
+staffGrid.innerHTML=grid;
+
+}
+
+/* SHIFT HISTORY */
+
+async function loadHistory(){
+
+document.getElementById("historyPopup").style.display="flex";
+
+try{
+
+const res = await fetch("/api/shift/history");
+
+if(!res.ok){
+document.getElementById("historyList").innerHTML="No shift history found";
+return;
+}
+
+const data = await res.json();
+
+let html="";
+
+data.forEach(s=>{
+
+let staff = s.staff_names ? s.staff_names.split(",") : [];
+let places = s.place_name ? s.place_name.split(",") : [];
+
+let staffHtml="";
+
+staff.forEach((name,index)=>{
+
+let place = places[index] ? places[index].trim() : "";
+
+staffHtml += `
+<div class="staff-box">
+${name.trim()}
+<br>
+<span style="font-size:11px;color:#9fdfff">
+${place}
+</span>
+</div>
+`;
+
+});
+
+html += `
+<div class="history-card">
+
+<b>${s.shift_name}</b> (${s.shift_type})
+
+<br>
+
+⏰ ${s.start_time} - ${s.end_time}
+
+<br>
+
+👤 ${s.incharge_name}
+
+<br>
+
+📞 ${s.phone_no}
+
+<br>
+
+👥 Total Staff: ${s.total_staff}
+
+<div class="history-staff">
+${staffHtml}
+</div>
+
+</div>
+`;
+
+});
+
+document.getElementById("historyList").innerHTML = html;
+
+}catch(err){
+
+document.getElementById("historyList").innerHTML="Error loading shift history";
+
+}
+
+}
+
+function closePopup(){
+popup.style.display="none";
+}
+
+function closeHistory(){
+historyPopup.style.display="none";
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Organizational Directory</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+font-family:Segoe UI;
+background:linear-gradient(135deg,#030b1a,#07132b,#010712);
+color:white;
+}
+
+/* HEADER */
+
+/* NEW HEADER DESIGN */
+
+/* HEADER LAYOUT */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 30px;
+border-bottom:1px solid #00eaff33;
+}
+
+/* LEFT */
+
+.header-left{
+display:flex;
+align-items:center;
+}
+
+.back-btn{
+background:#021a36;
+border:1px solid #00eaff;
+color:#36e3ff;
+padding:8px 14px;
+border-radius:8px;
+}
+
+.back-btn:hover{
+background:#00eaff;
+color:black;
+}
+
+/* CENTER */
+
+.header-center{
+text-align:center;
+flex:1;
+}
+
+.tgiccc-title{
+font-size:30px;
+font-weight:bold;
+color:#00eaff;
+text-shadow:
+0 0 6px #00eaff,
+0 0 12px #00eaff;
+}
+
+.header-center .title{
+font-size:14px;
+color:#9fb7ff;
+}
+
+/* RIGHT */
+
+.header-right{
+display:flex;
+align-items:center;
+}
+
+.profile-btn{
+background:linear-gradient(45deg,#00eaff,#0072ff);
+color:white;
+padding:8px 14px;
+border-radius:8px;
+}
+
+/* PROFILE STRIP */
+
+.profile-strip{
+margin:20px 30px;
+padding:18px;
+border-radius:14px;
+background:linear-gradient(135deg,#021a36,#032a55);
+border:1px solid #00eaff;
+box-shadow:
+0 0 10px #00eaff55,
+0 0 20px #00eaff22 inset;
+}
+
+/* PROFILE BOX */
+
+.profile-box{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+/* AVATAR */
+
+.profile-avatar{
+width:120px;
+height:120px;
+border-radius:50%;
+background:#00eaff;
+color:black;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:48px;
+font-weight:bold;
+box-shadow:0 0 22px #00eaff;
+}
+
+/* PROFILE ICON */
+
+.profile-icon{
+font-size:60px;
+color:#00eaff;
+display:flex;
+align-items:center;
+justify-content:center;
+margin:auto;
+}
+
+
+/* PROFILE TEXT */
+
+.profile-name{
+font-size:16px;
+font-weight:bold;
+color:#36e3ff;
+}
+
+.profile-role{
+font-size:13px;
+color:#9fb7ff;
+}
+
+/* PROFILE GLOW SECTION */
+
+.profile-glow-section{
+padding:25px 30px;
+display:flex;
+justify-content:center;
+}
+
+.profile-box{
+display:flex;
+align-items:center;
+gap:20px;
+padding:18px 30px;
+border-radius:14px;
+background:linear-gradient(135deg,#021a36,#032a55);
+border:2px solid #00eaff;
+box-shadow:
+0 0 15px #00eaff,
+0 0 35px #00eaff33;
+}
+
+.profile-circle{
+width:60px;
+height:60px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+background:#021a36;
+border:2px solid #00eaff;
+box-shadow:0 0 12px #00eaff;
+}
+
+.profile-name{
+font-size:18px;
+font-weight:bold;
+color:#00eaff;
+}
+
+.profile-location{
+font-size:13px;
+color:#9fb7ff;
+}
+
+.title{
+font-size:26px;
+color:#40e0ff;
+font-weight:bold;
+text-shadow:0 0 6px #00eaff;
+}
+
+.controls{
+display:flex;
+gap:10px;
+}
+
+button{
+cursor:pointer;
+border:none;
+border-radius:6px;
+padding:8px 14px;
+transition:0.25s;
+}
+
+.view-btn{
+background:#0a2f5f;
+border:1px solid #00eaff;
+color:#36e3ff;
+}
+
+.view-btn:hover{
+background:#00eaff;
+color:black;
+}
+
+.create-btn{
+background:linear-gradient(45deg,#00c6ff,#0072ff);
+color:white;
+}
+
+/* STATS */
+
+.stats-container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+padding:25px 30px;
+}
+
+.stat-card{
+display:flex;
+align-items:center;
+gap:16px;
+padding:20px;
+border-radius:14px;
+border:1px solid #00eaff33;
+transition:0.3s;
+}
+
+.stat-card:hover{
+transform:translateY(-3px);
+box-shadow:0 0 15px #00eaff33;
+}
+
+/* ICON */
+
+.stat-icon{
+width:50px;
+height:50px;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+color:white;
+}
+
+/* NUMBERS */
+
+.stat-number{
+font-size:28px;
+font-weight:bold;
+}
+
+.stat-label{
+font-size:13px;
+opacity:0.8;
+}
+
+/* CARD COLORS */
+
+.stat-blue{
+background:linear-gradient(135deg,#032a55,#021a36);
+}
+
+.stat-blue .stat-icon{
+background:#00bcd4;
+}
+
+.stat-blue .stat-number{
+color:#00eaff;
+}
+
+.stat-purple{
+background:linear-gradient(135deg,#2c0f45,#120b2e);
+}
+
+.stat-purple .stat-icon{
+background:#9c27b0;
+}
+
+.stat-purple .stat-number{
+color:#d884ff;
+}
+
+.stat-green{
+background:linear-gradient(135deg,#0b3d2e,#021a36);
+}
+
+.stat-green .stat-icon{
+background:#00c853;
+}
+
+.stat-green .stat-number{
+color:#4cff9b;
+}
+
+.stat-orange{
+background:linear-gradient(135deg,#4a2600,#1e1200);
+}
+
+.stat-orange .stat-icon{
+background:#ff9800;
+}
+
+.stat-orange .stat-number{
+color:#ffb74d;
+}
+
+
+/* FILTER BAR */
+
+.filter-bar{
+display:flex;
+flex-wrap:wrap;
+align-items:center;
+gap:10px;
+padding:0 30px 20px 30px;
+}
+
+.search-box{
+padding:10px;
+width:260px;
+border-radius:8px;
+border:1px solid #00eaff;
+background:#07132b;
+color:white;
+}
+
+.filter-btn{
+padding:8px 14px;
+border-radius:8px;
+background:#021a36;
+border:1px solid #00eaff;
+color:#36e3ff;
+}
+
+.filter-btn.active{
+background:#00eaff;
+color:black;
+}
+
+/* DIRECTORY */
+
+#directoryContainer{
+padding:30px;
+}
+
+/* BRANCH SECTION */
+
+.branch-section{
+margin-bottom:40px;
+}
+
+.branch-box{
+background:linear-gradient(135deg,#021a36,#032a55);
+border:1.5px solid #00eaff;
+border-radius:12px;
+padding:14px 22px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.branch-name{
+font-size:18px;
+color:#36e3ff;
+font-weight:bold;
+}
+
+.personnel-badge{
+display:flex;
+align-items:center;
+gap:6px;
+padding:6px 12px;
+border-radius:8px;
+background:linear-gradient(135deg,#00eaff,#0072ff);
+color:white;
+font-weight:bold;
+}
+
+/* GRID */
+
+.grid .personnel-list{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+gap:15px;
+margin-top:15px;
+}
+
+/* LIST */
+
+.list .personnel-list{
+display:flex;
+flex-direction:column;
+gap:10px;
+margin-top:15px;
+}
+
+/* TREE */
+
+/* TREE VIEW */
+
+.tree .personnel-list{
+display:flex;
+flex-direction:column;
+gap:35px;
+margin-left:50px;
+margin-top:20px;
+position:relative;
+}
+
+/* vertical line */
+
+.tree .personnel-list::before{
+content:"";
+position:absolute;
+left:-25px;
+top:0;
+bottom:0;
+width:2px;
+background:#00eaff;
+}
+
+/* horizontal connector */
+
+.tree .personnel-card::before{
+content:"";
+position:absolute;
+left:-25px;
+top:20px;
+width:25px;
+height:2px;
+background:#00eaff;
+}
+
+
+/* CARD */
+
+.personnel-card{
+background:#021a36;
+border:1px solid #00eaff;
+border-radius:10px;
+padding:14px;
+width:260px;
+position:relative;
+}
+
+.tree .personnel-card::before{
+content:"";
+position:absolute;
+left:-25px;
+top:20px;
+width:25px;
+height:2px;
+background:#00eaff;
+}
+
+.contact{
+font-size:12px;
+color:#9fb7ff;
+margin-top:5px;
+}
+
+.details-btn{
+margin-top:10px;
+padding:6px 10px;
+font-size:12px;
+background:#0a2f5f;
+border:1px solid #00eaff;
+color:#36e3ff;
+}
+
+.details-btn:hover{
+background:#00eaff;
+color:black;
+}
+
+/* POPUP */
+
+.popup{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.85);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;          /* ensures popup appears above grid */
+}
+
+.popup-box{
+position:relative;
+background:#021a36;
+width:420px;
+max-height:85vh;       /* limit height */
+overflow-y:auto;       /* internal scroll */
+padding:25px;
+border-radius:12px;
+border:2px solid #00eaff;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+.popup-box input{
+padding:8px;
+border-radius:6px;
+border:1px solid #00eaff;
+background:#07132b;
+color:white;
+}
+
+.save-btn{
+margin-top:10px;
+padding:10px;
+border-radius:8px;
+background:linear-gradient(45deg,#00eaff,#0072ff);
+color:white;
+}
+
+.close-btn{
+position:absolute;
+top:10px;
+right:12px;
+width:30px;
+height:30px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:50%;
+background:#ff003c;
+color:white;
+cursor:pointer;
+}
+
+/* DETAILS CARD */
+
+.details-card{
+position:relative;
+width:500px;
+background:linear-gradient(135deg,#07132b,#0a1f45);
+border-radius:16px;
+padding:30px;
+border:2px solid #00eaff;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:15px;
+}
+
+.profile-rank{
+font-size:24px;
+color:#00eaff;
+font-weight:bold;
+}
+
+.contact-card{
+width:100%;
+background:#061832;
+border:1px solid #00eaff44;
+border-radius:12px;
+padding:20px;
+display:flex;
+flex-direction:column;
+gap:18px;
+}
+
+.contact-row{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.icon-box{
+width:50px;
+height:50px;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:20px;
+}
+
+.phone{background:#00c853;}
+.email{background:#00bcd4;}
+
+.action-btn{
+padding:10px 16px;
+border-radius:8px;
+font-weight:bold;
+}
+
+.call{background:#00c853;color:black;}
+.mail{background:#00bcd4;color:black;}
+
+ 
+
+
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="header-left">
+<button class="back-btn" onclick="history.back()"> Back</button>
+</div>
+
+<div class="header-center">
+<div class="tgiccc-title">TGiCCC</div>
+ 
+</div>
+
+<div class="header-right">
+<button class="profile-btn" onclick="openProfile()">👤 Profile</button></div>
+
+</div>
+
+ 
+
+  
+<div class="header">
+<div class="title">Organizational Directory</div>
+
+<div class="controls">
+<button class="view-btn" onclick="setView('grid')">Grid</button>
+<button class="view-btn" onclick="setView('list')">List</button>
+<button class="view-btn" onclick="setView('tree')">Tree</button>
+<button class="create-btn" onclick="openPopup()">Create Directory</button>
+</div>
+</div>
+
+
+<div class="stats-container">
+
+<div class="stat-card stat-blue">
+<div class="stat-icon">👮</div>
+<div>
+<div class="stat-number" id="totalPersonnel">0</div>
+<div class="stat-label">TOTAL PERSONNEL</div>
+</div>
+</div>
+
+<div class="stat-card stat-purple">
+<div class="stat-icon">⭐</div>
+<div>
+<div class="stat-number" id="seniorOfficers">0</div>
+<div class="stat-label">SENIOR OFFICERS</div>
+</div>
+</div>
+
+<div class="stat-card stat-green">
+<div class="stat-icon">🏢</div>
+<div>
+<div class="stat-number" id="branchCount">0</div>
+<div class="stat-label">MAIN BRANCHES</div>
+</div>
+</div>
+
+<div class="stat-card stat-orange">
+<div class="stat-icon">📂</div>
+<div>
+<div class="stat-number" id="deptCount">0</div>
+<div class="stat-label">DEPARTMENTS</div>
+</div>
+</div>
+
+</div>
+
+
+<div class="filter-bar">
+
+<input type="text" class="search-box"
+placeholder="Search name, rank or branch"
+onkeyup="searchPersonnel(this.value)">
+
+<button class="filter-btn active" onclick="filterRank('All',this)">All</button>
+<button class="filter-btn" onclick="filterRank('Director',this)">Director</button>
+<button class="filter-btn" onclick="filterRank('SP',this)">SP</button>
+<button class="filter-btn" onclick="filterRank('DSP',this)">DSP</button>
+<button class="filter-btn" onclick="filterRank('Inspector',this)">Inspector</button>
+<button class="filter-btn" onclick="filterRank('SI',this)">SI</button>
+
+</div>
+
+
+<div id="directoryContainer" class="grid"></div>
+
+
+<!-- CREATE POPUP -->
+
+<div class="popup" id="popup">
+
+<div class="popup-box">
+
+<div class="close-btn" onclick="closePopup()">✖</div>
+
+<h2>Create Directory</h2>
+
+<label>Branch Name</label>
+<input id="branch">
+
+<label>Personnel Number</label>
+<input id="personnel">
+
+<label>PCS Number</label>
+<input id="pcs">
+
+<label>Rank</label>
+<input id="rank">
+
+<label>Alias Name</label>
+<input id="alias">
+
+<label>Phone Number</label>
+<input id="phone">
+
+<label>Email</label>
+<input id="email">
+
+<button class="save-btn" onclick="saveDirectory()">Save Directory</button>
+
+</div>
+</div>
+
+
+<!-- DETAILS POPUP -->
+
+<!-- VIEW DETAILS POPUP -->
+
+<div class="popup" id="detailsPopup">
+
+<div class="details-card">
+
+<div class="close-btn" onclick="closeDetails()">✖</div>
+
+<div class="contact-heading"><h1>Contact Details</h1></div>
+
+<div class="profile-icon">👤</div>
+
+<div class="profile-rank" id="d_rank"></div>
+<div class="profile-org">TGiCCC</div>
+
+<div class="contact-card">
+
+<div class="contact-row">
+
+<div class="icon-box phone">📞</div>
+
+<div class="contact-info">
+<div class="label">Phone Number</div>
+<div class="value" id="d_phone"></div>
+</div>
+
+<button class="action-btn call"
+onclick="window.location.href='tel:'+document.getElementById('d_phone').innerText">
+Call Now
+</button>
+
+</div>
+
+<div class="contact-row">
+
+<div class="icon-box email">✉</div>
+
+<div class="contact-info">
+<div class="label">Email Address</div>
+<div class="value" id="d_email"></div>
+</div>
+
+<button class="action-btn mail"
+onclick="sendEmail()">
+Send Email
+</button>
+
+</div>
+
+</div>
+
+<div class="footer">
+TGiCCC Command Control Center, Banjara Hills, Hyderabad
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let globalData=[]
+let filteredData=[]
+
+
+
+function setView(type){
+document.getElementById("directoryContainer").className=type
+renderDirectories(filteredData)
+}
+
+
+function showDetails(p){
+
+document.getElementById("d_rank").innerText = p.rank
+document.getElementById("d_phone").innerText = p.phone
+document.getElementById("d_email").innerText = p.email
+
+document.getElementById("detailsPopup").style.display = "flex"
+
+}
+
+function closeDetails(){
+
+document.getElementById("detailsPopup").style.display = "none"
+
+}
+
+function openPopup(){document.getElementById("popup").style.display="flex"}
+function closePopup(){document.getElementById("popup").style.display="none"}
+
+function showDetails(p){
+document.getElementById("d_rank").innerText=p.rank
+document.getElementById("d_phone").innerText=p.phone
+document.getElementById("d_email").innerText=p.email
+document.getElementById("detailsPopup").style.display="flex"
+}
+
+function closeDetails(){
+document.getElementById("detailsPopup").style.display="none"
+}
+
+
+
+function updateStats(data){
+
+/* TOTAL PERSONNEL (sum of personnel numbers) */
+
+let totalPersonnel = data.reduce((sum,row)=>{
+return sum + (parseInt(row.personnel) || 0)
+},0)
+
+document.getElementById("totalPersonnel").innerText = totalPersonnel
+
+
+/* SENIOR OFFICERS */
+
+let senior=data.filter(x=>x.rank==="Director"||x.rank==="SP"||x.rank==="DSP")
+document.getElementById("seniorOfficers").innerText=senior.length
+
+
+/* BRANCH COUNT */
+
+const branches=[...new Set(data.map(x=>x.branch))]
+document.getElementById("branchCount").innerText=branches.length
+
+
+/* DEPARTMENT COUNT */
+
+document.getElementById("deptCount").innerText=branches.length
+
+}
+
+
+function filterRank(rank,btn){
+
+document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"))
+btn.classList.add("active")
+
+if(rank==="All"){filteredData=globalData}
+else{filteredData=globalData.filter(p=>p.rank===rank)}
+
+renderDirectories(filteredData)
+updateStats(filteredData)
+}
+
+function searchPersonnel(text){
+
+text=text.toLowerCase()
+
+let result=globalData.filter(p=>
+(p.rank && p.rank.toLowerCase().includes(text)) ||
+(p.alias && p.alias.toLowerCase().includes(text)) ||
+(p.branch && p.branch.toLowerCase().includes(text))
+)
+
+renderDirectories(result)
+updateStats(result)
+}
+
+async function loadDirectories(){
+
+const res=await fetch("http://localhost:5000/directories")
+const data=await res.json()
+
+globalData=data
+filteredData=data
+
+renderDirectories(data)
+updateStats(data)
+}
+
+function renderDirectories(data){
+
+const container=document.getElementById("directoryContainer")
+container.innerHTML=""
+
+const branches={}
+const branchPersonnelTotals={}
+
+/* GROUP DATA + SUM PERSONNEL NUMBERS */
+
+data.forEach(row=>{
+
+if(!branches[row.branch]){
+branches[row.branch]=[]
+branchPersonnelTotals[row.branch]=0
+}
+
+branches[row.branch].push(row)
+
+/* add personnel number */
+
+const pNumber=parseInt(row.personnel)||0
+branchPersonnelTotals[row.branch]+=pNumber
+
+})
+
+Object.keys(branches).forEach(branch=>{
+
+let personnelHTML=""
+
+branches[branch].forEach((p,index)=>{
+
+personnelHTML += `
+
+<div class="personnel-card" style="margin-left:${index*50}px">
+
+<b>${p.rank}</b> ${p.personnel}<br>
+PCS: ${p.pcs || "-"}<br>
+${p.alias || ""}
+
+<div class="contact">
+📞 ${p.phone} 
+| ✉ ${p.email}
+</div>
+
+<button class="details-btn"
+onclick='showDetails(${JSON.stringify(p)})'>
+View Details
+</button>
+
+</div>
+
+`
+
+})
+
+container.innerHTML+=`
+
+<div class="branch-section">
+
+<div class="branch-box">
+
+<div class="branch-name">${branch}</div>
+
+<div class="personnel-badge">
+${branchPersonnelTotals[branch]} Personnel
+</div>
+
+</div>
+
+<div class="personnel-list">
+${personnelHTML}
+</div>
+
+</div>
+
+`
+
+})
+
+}
+async function sendEmail(){
+
+const email=document.getElementById("d_email").innerText
+const rank=document.getElementById("d_rank").innerText
+
+await fetch("http://localhost:5000/sendEmail",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({email,rank})
+})
+
+alert("Email request sent")
+}
+
+async function saveDirectory(){
+
+const branch=document.getElementById("branch").value
+const personnel=document.getElementById("personnel").value
+const pcs=document.getElementById("pcs").value
+const rank=document.getElementById("rank").value
+const alias=document.getElementById("alias").value
+const phone=document.getElementById("phone").value
+const email=document.getElementById("email").value
+
+await fetch("http://localhost:5000/createDirectory",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body: JSON.stringify({
+  branch,
+  personnel,
+  pcs,
+  rank,
+  alias,
+  phone,
+  email
+})
+})
+
+closePopup()
+loadDirectories()
+}
+
+window.onload = loadDirectories
+
+let branchCounts={}
+async function loadBranchCounts(){
+
+const res = await fetch("http://localhost:5000/branchCounts")
+const data = await res.json()
+
+data.forEach(b=>{
+branchCounts[b.branch] = b.total_personnel
+})
+
+}
+
+function openProfile(){
+window.location.href="profile.html" 
+}
+
+</script>
+
+</body>
+</html>
