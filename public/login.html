@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:'Inter',sans-serif;
+background:#050d26;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+color:white;
+}
+
+/* Title */
+
+.login-title{
+font-size:40px;
+font-weight:700;
+text-align:center;
+margin-bottom:10px;
+letter-spacing:4px;
+color:#43e7ff;
+
+text-shadow:
+0 0 5px #43e7ff,
+0 0 10px #43e7ff,
+0 0 20px #16d5e1,
+0 0 40px #16d5e1;
+}
+
+.section{
+text-align:center;
+}
+
+.auth-card p{
+color:#aaa;
+margin-bottom:20px;
+}
+
+/* Card */
+
+.card{
+width:420px;
+padding:40px;
+background:rgba(12,22,60,0.85);
+border-radius:15px;
+border:1px solid #0b4fa6;
+}
+
+.card label{
+text-align:left;
+}
+
+.card .back{
+text-align:left;
+width:100%;
+}
+
+
+/* Back */
+
+.back{
+color:#43e7ff;
+cursor:pointer;
+margin-bottom:15px;
+display:inline-block;
+}
+
+
+
+/* Secure label */
+
+.secure{
+border:1px solid #18ffb0;
+padding:12px;
+border-radius:8px;
+text-align:center;
+color:#18ffb0;
+margin-bottom:25px;
+}
+
+/* Inputs */
+
+label{
+display:block;
+font-size:13px;
+color:#43e7ff;
+text-align:center;
+margin-bottom:6px;
+}
+
+.input-box{
+position:relative;
+}
+
+input{
+width:100%;
+padding:14px 16px;
+margin-top:8px;
+margin-bottom:20px;
+border-radius:10px;
+border:1px solid #0b4fa6;
+background:#02091f;
+color:white;
+font-size:15px;
+line-height:20px;
+box-sizing:border-box;
+}
+
+/* Eye icon */
+
+.eye{
+position:absolute;
+right:12px;
+top:18px;
+cursor:pointer;
+font-size:16px;
+color:#43e7ff;
+}
+
+/* Buttons */
+
+button{
+width:100%;
+padding:16px;
+border:none;
+border-radius:10px;
+font-size:16px;
+cursor:pointer;
+margin-top:10px;
+font-family:'Inter',sans-serif;
+transition:all 0.3s ease;
+}
+
+/* ACCESS PORTAL button */
+
+.login-btn{
+background:linear-gradient(90deg,#0a5bd8,#16d5e1);
+color:white;
+box-shadow:0 0 10px #16d5e1;
+}
+
+/* Neon hover glow */
+
+.login-btn:hover{
+transform:scale(1.07);
+
+box-shadow:
+0 0 5px #16d5e1,
+0 0 10px #16d5e1,
+0 0 20px #16d5e1,
+0 0 40px #16d5e1,
+0 0 80px #16d5e1;
+}
+
+/* Register + Forgot row */
+
+.links{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
+
+/* Outline neon buttons */
+
+.link-btn{
+flex:1;
+background:none;
+border:1px solid #16d5e1;
+color:#16d5e1;
+padding:10px;
+border-radius:8px;
+cursor:pointer;
+}
+
+/* Neon hover */
+
+.link-btn:hover{
+background:#16d5e1;
+color:#050d26;
+
+box-shadow:
+0 0 5px #16d5e1,
+0 0 10px #16d5e1,
+0 0 20px #16d5e1,
+0 0 40px #16d5e1;
+
+transform:scale(1.05);
+}
+
+/* Hide sections */
+
+.hidden{
+display:none;
+}
+
+/* ROLE DROPDOWN */
+
+select{
+width:100%;
+padding:14px 16px;
+margin-top:8px;
+margin-bottom:20px;
+border-radius:10px;
+border:1px solid #0b4fa6;
+background:#02091f;
+color:#43e7ff;
+font-size:15px;
+outline:none;
+cursor:pointer;
+transition:0.3s;
+}
+
+/* Glow on focus */
+
+select:focus{
+border-color:#16d5e1;
+box-shadow:
+0 0 5px #16d5e1,
+0 0 10px #16d5e1,
+0 0 20px #16d5e1;
+}
+
+/* Option styling */
+
+select option{
+background:#02091f;
+color:#ffffff;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="section">
+
+<div class="auth-card">
+
+<h1 class="login-title">TGiCCC</h1>
+<p>Secure Login</p>
+
+<div class="card">
+
+<div class="back" onclick="window.location='index.html'">← Back to Home</div>
+
+<div class="secure">🔒 SECURE CONNECTION</div>
+
+<!-- LOGIN -->
+
+<div id="loginBox">
+
+<label>EMPLOYEE ID</label>
+<input id="login_id" placeholder="Enter ID">
+
+<label>PASSWORD</label>
+
+<div class="input-box">
+<input id="login_pass" type="password" placeholder="Enter password">
+<span class="eye" onclick="togglePassword('login_pass')">👁</span>
+</div>
+
+<button class="login-btn" onclick="login()">ACCESS PORTAL</button>
+
+<div class="links">
+<button class="link-btn" onclick="showRegister()">Register</button>
+<button class="link-btn" onclick="showForgot()">Forgot Password</button>
+</div>
+
+</div>
+
+<!-- REGISTER -->
+
+<div id="registerBox" class="hidden">
+
+<label>ROLE</label>
+<select id="login_role">
+  <option value="user">User</option>
+  <option value="admin">Admin</option>
+</select>
+
+<label>EMPLOYEE ID</label>
+<input id="reg_id" placeholder="Create ID">
+
+<label>PASSWORD</label>
+
+<div class="input-box">
+<input id="reg_pass" type="password" placeholder="Create password">
+<span class="eye" onclick="togglePassword('reg_pass')">👁</span>
+</div>
+
+<button class="login-btn" onclick="register()">REGISTER</button>
+
+<button class="link-btn" onclick="showLogin()">Back to Login</button>
+
+</div>
+
+<!-- FORGOT PASSWORD -->
+
+<div id="forgotBox" class="hidden">
+
+<label>EMPLOYEE ID</label>
+<input id="forgot_id" placeholder="Enter ID">
+
+<label>NEW PASSWORD</label>
+
+<div class="input-box">
+<input id="new_pass" type="password" placeholder="New password">
+<span class="eye" onclick="togglePassword('new_pass')">👁</span>
+</div>
+
+<button class="login-btn" onclick="resetPassword()">UPDATE PASSWORD</button>
+
+<button class="link-btn" onclick="showLogin()">Back to Login</button>
+
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+
+<script>
+
+/* section switching */
+
+function showRegister(){
+document.getElementById("loginBox").classList.add("hidden")
+document.getElementById("registerBox").classList.remove("hidden")
+}
+
+function showForgot(){
+document.getElementById("loginBox").classList.add("hidden")
+document.getElementById("forgotBox").classList.remove("hidden")
+}
+
+function showLogin(){
+document.getElementById("loginBox").classList.remove("hidden")
+document.getElementById("registerBox").classList.add("hidden")
+document.getElementById("forgotBox").classList.add("hidden")
+}
+
+/* password toggle */
+
+function togglePassword(id){
+const input=document.getElementById(id)
+input.type=input.type==="password"?"text":"password"
+}
+
+/* login */
+
+async function login(){
+
+const employee_id = document.getElementById("login_id").value;
+const password = document.getElementById("login_pass").value;
+const role = document.getElementById("login_role").value;
+
+const res = await fetch("/login",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({employee_id,password,role})
+});
+
+const data = await res.json();
+
+if(data.success){
+
+// ✅ SAVE BOTH
+localStorage.setItem("employee_id", data.employee_id);
+localStorage.setItem("role", data.role);
+
+alert("Login Successful");
+
+// redirect
+window.location = "dashboard.html";
+
+}else{
+alert(data.message);
+}
+
+}
+
+/* register */
+
+async function register(){
+
+const employee_id = document.getElementById("reg_id").value;
+const password = document.getElementById("reg_pass").value;
+
+// ✅ GET ROLE FROM DROPDOWN
+const role = document.getElementById("login_role").value;
+
+const res = await fetch("/register",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({employee_id,password,role})   // ✅ SEND ROLE
+});
+
+const data = await res.json();
+
+alert(data.message);
+
+if(data.success){
+showLogin();
+}
+
+}
+
+/* reset password */
+
+async function resetPassword(){
+
+const employee_id=document.getElementById("forgot_id").value
+const newpassword=document.getElementById("new_pass").value
+
+const res=await fetch("/forgot-password",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({employee_id,newpassword})
+
+})
+
+const data=await res.json()
+
+alert(data.message)
+
+if(data.success){
+showLogin()
+}
+
+}
+
+</script>
+
+</body>
+</html>

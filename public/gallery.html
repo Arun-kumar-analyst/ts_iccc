@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Gallery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI, sans-serif;
+    background:#07132b;
+    color:white;
+}
+
+/* ================= TOPBAR HEADER ================= */
+.topbar{
+    position:relative;
+    height:70px;
+    border-bottom:2px solid rgba(0,224,255,0.6);
+    box-shadow:0 3px 15px rgba(0,224,255,0.2);
+}
+
+/* Back Button - Left */
+.dashboard-btn{
+    position:absolute;
+    left:20px;
+    top:50%;
+    transform:translateY(-50%);
+    background:#00e0ff;
+    color:#07132b;
+    padding:8px 18px;
+    border:none;
+    border-radius:20px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.dashboard-btn:hover{
+    background:#00bcd4;
+}
+
+/* Center Logo */
+.logo-center{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%, -50%);
+    font-size:26px;
+    letter-spacing:4px;
+    color:#00e0ff;
+    font-weight:bold;
+}
+
+/* SA Combined Button - Right */
+.sa-combined-btn{
+    position:absolute;
+    right:20px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:linear-gradient(145deg,#0b1c3d,#07132b);
+    border:1px solid #00e0ff;
+    color:#00e0ff;
+    padding:8px 18px;
+    border-radius:30px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.sa-combined-btn:hover{
+    box-shadow:0 0 15px rgba(0,224,255,0.6);
+}
+
+.sa-mini-circle{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    background:#00e0ff;
+    color:#07132b;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:bold;
+}
+
+/* ================= TOP SECTION ================= */
+.top{
+    padding:30px 50px;
+}
+
+.breadcrumb{
+    font-size:14px;
+    color:#9db6ff;
+}
+
+.breadcrumb span{
+    color:#00e0ff;
+}
+
+.title{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    margin-top:20px;
+}
+
+.title img{
+    width:45px;
+}
+
+.title h1{
+    font-size:48px;
+    color:#00e0ff;
+    letter-spacing:2px;
+}
+
+.subtitle{
+    margin-top:10px;
+    color:#9aaacb;
+}
+
+/* ================= GRID ================= */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:40px;
+    padding:20px 50px 80px 50px;
+}
+
+/* ================= CARD ================= */
+.card{
+    background:linear-gradient(145deg,#0b1c3d,#07132b);
+    border:1px solid rgba(0,224,255,0.3);
+    border-radius:20px;
+    padding:40px;
+    text-align:center;
+    transition:0.3s ease;
+    cursor:pointer;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 0 25px rgba(0,224,255,0.4);
+}
+
+.card img{
+    width:80px;
+    margin-bottom:20px;
+    border-radius:10px;
+}
+
+.card h3{
+    margin:10px 0;
+    font-size:22px;
+}
+
+.card p{
+    color:#9aaacb;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<div class="topbar">
+    <button class="dashboard-btn" onclick="goDashboard()"> Back</button>
+
+    <div class="logo-center">TGiCCC</div>
+
+    <button class="sa-combined-btn" onclick="goSystemAdministration()">
+       
+        <span>👤 Profile</span>
+    </button>
+</div>
+
+<!-- ================= CONTENT ================= -->
+<div class="title">
+      <h1>🖼️ GALLERY</h1>
+    </div>
+
+    <div class="subtitle"><h2>Photo gallery </h2></div>
+</div>
+
+<div class="grid" id="galleryGrid"></div>
+
+<script>
+function goDashboard(){
+    window.location.href="dashboard.html";
+}
+
+function goSystemAdministration(){
+    window.location.href="profile.html";
+}
+
+async function loadEvents(){
+    const res = await fetch("/events_t");
+    const events = await res.json();
+
+    const grid = document.getElementById("galleryGrid");
+    grid.innerHTML="";
+
+    const today = new Date();
+    const currentDate = today.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+    });
+
+    if(events.length === 0){
+        grid.innerHTML = "<p style='padding:20px;'>No events available.</p>";
+        return;
+    }
+
+    events.forEach(event=>{
+        const card = document.createElement("div");
+        card.className="card";
+
+        card.innerHTML = `
+            <img src="/uploads/${event.cover_image || 'leader1.webp'}">
+            <h3>${event.title}</h3>
+            <p>${currentDate} • ${event.photo_count} photos</p>
+        `;
+
+        card.onclick = ()=>{
+            window.location="view.html?event=" + event.id;
+        };
+
+        grid.appendChild(card);
+    });
+}
+
+loadEvents();
+</script>
+
+</body>
+</html>

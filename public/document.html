@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TGiCCC - Documents</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI, sans-serif;
+    background:#07132b;
+    color:white;
+}
+
+/* ================= HEADER ================= */
+.topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:15px 40px;
+    background:#061029;
+    border-bottom:2px solid #00eaff;
+    position:relative;
+}
+
+.logo-center{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:1.5rem;
+    font-weight:bold;
+    color:#00E5FF;
+    letter-spacing:2px;
+}
+
+.dashboard-btn{
+    background:transparent;
+    border:2px solid #00E5FF;
+    color:white;
+    padding:6px 15px;
+    border-radius:25px;
+    cursor:pointer;
+}
+
+.sa-combined-btn{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border:2px solid #00E5FF;
+    background:transparent;
+    color:white;
+    font-weight:bold;
+    padding:6px 15px;
+    border-radius:30px;
+    cursor:pointer;
+}
+
+.sa-mini-circle{
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    border:2px solid #00E5FF;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    font-size:13px;
+}
+
+
+/* Click Effect */
+.dashboard-btn:active,
+.sa-combined-btn:active{
+    transform: scale(0.95);
+    box-shadow: 0 0 15px #00E5FF,
+                inset 0 0 20px rgba(0,0,0,0.4);
+}
+
+/* Optional: keep filled look while focused */
+.dashboard-btn:focus,
+.sa-combined-btn:focus{
+    outline: none;
+    box-shadow: 0 0 12px #00E5FF,
+                0 0 30px rgba(0,229,255,0.7);
+}
+/* ================= SECOND HEADER ================= */
+.sub-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 60px;
+    border-bottom:1px solid rgba(0,229,255,0.4);
+}
+
+.page-name{
+    font-size:30px;
+    font-weight:bold;
+    color:#00E5FF;
+}
+
+.create-btn{
+    padding:8px 18px;
+    background:#00E5FF;
+    color:#07132b;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+
+
+/* ================= SEARCH ================= */
+.search-box{
+    margin:25px 60px;
+    max-width:350px;
+}
+
+.search-box input{
+    width:100%;
+    padding:8px 15px;
+    border-radius:20px;
+    border:1px solid #00eaff;
+    background:#0b1c3f;
+    color:white;
+}
+
+/* ================= DOCUMENT LIST ================= */
+.doc-container{
+    padding:20px 60px 60px;
+}
+
+.doc-grid{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.doc-card{
+    background:#0b1c3f;
+    padding:25px;
+    border-radius:15px;
+    border:1px solid rgba(0,229,255,0.4);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    transition:0.3s;
+}
+
+.doc-card:hover{
+    box-shadow:0 0 18px rgba(0,255,255,0.5);
+}
+
+.doc-info{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.doc-title{
+    font-size:1.4rem;
+    font-weight:bold;
+}
+
+.doc-desc{
+    font-size:1rem;
+    color:#9bb3c9;
+}
+
+.doc-meta{
+    font-size:0.9rem;
+    font-weight:600;
+    color:#00E5FF;
+}
+
+/* Buttons */
+.doc-actions{
+    display:flex;
+    gap:10px;
+}
+
+.view-btn{
+    background:#00E5FF;
+    color:#07132b;
+    padding:8px 15px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.download-btn{
+    background:#ff9800;
+    color:white;
+    padding:8px 15px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.download-btn:hover{
+    background:#ffb74d;
+}
+
+/* ================= MODALS ================= */
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.8);
+    z-index:1000;
+}
+
+.modal-content{
+    width:80%;
+    height:90%;
+    margin:3% auto;
+    background:white;
+    position:relative;
+    border-radius:10px;
+}
+
+.close-btn{
+    position:absolute;
+    right:15px;
+    top:10px;
+    font-size:22px;
+    cursor:pointer;
+}
+
+iframe{
+    width:100%;
+    height:100%;
+    border:none;
+}
+
+/* ================= UPLOAD MODAL ================= */
+.upload-modal-content{
+    width:600px;
+    margin:6% auto;
+    background:#0b1c3f;
+    padding:30px;
+    border-radius:15px;
+    border:1px solid #00eaff;
+    position:relative;
+}
+
+.upload-modal-content input{
+    width:100%;
+    padding:10px;
+    margin-bottom:12px;
+    border-radius:8px;
+    border:1px solid #00eaff;
+    background:#07132b;
+    color:white;
+}
+
+.upload-modal-content button{
+    padding:10px 20px;
+    background:#00E5FF;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+
+/* ================= GLOW EFFECT ================= */
+
+/* Common button transition */
+button{
+    transition: all 0.3s ease-in-out;
+}
+
+/* Dashboard + SA Buttons */
+.dashboard-btn:hover,
+.sa-combined-btn:hover{
+    box-shadow: 0 0 8px #00E5FF,
+                0 0 18px #00E5FF,
+                0 0 28px rgba(0,229,255,0.6);
+    transform: translateY(-2px);
+}
+
+/* Create Button Glow */
+.create-btn:hover{
+    box-shadow: 0 0 10px #00E5FF,
+                0 0 25px rgba(0,229,255,0.7);
+    transform: translateY(-2px);
+}
+
+/* View Button Glow */
+.view-btn:hover{
+    box-shadow: 0 0 10px #00E5FF,
+                0 0 25px rgba(0,229,255,0.7);
+    transform: scale(1.05);
+}
+
+/* Download Button Glow */
+.download-btn:hover{
+    box-shadow: 0 0 10px #ff9800,
+                0 0 25px rgba(255,152,0,0.8);
+    transform: scale(1.05);
+}
+
+/* Upload Modal Button */
+.upload-modal-content button:hover{
+    box-shadow: 0 0 12px #00E5FF,
+                0 0 30px rgba(0,229,255,0.7);
+    transform: scale(1.05);
+}
+
+.form-group{
+display:flex;
+flex-direction:column;
+gap:10px;
+width:300px;
+}
+
+label{
+font-weight:600;
+color:#00eaff;
+font-size:14px;
+}
+
+input{
+padding:8px;
+border-radius:5px;
+border:1px solid #ccc;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+    <button class="dashboard-btn" onclick="goDashboard()"> Back</button>
+    <div class="logo-center">TGiCCC</div>
+    <button class="sa-combined-btn" onclick="goProfile()">
+       
+        <span>👤 Profile</span>
+    </button>
+</div>
+
+<div class="sub-header">
+    <div class="page-name">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="#00eaff"
+         style="vertical-align:middle;margin-right:8px;">
+        <path d="M10 4H2v16h20V6H12l-2-2z"/>
+    </svg>
+    DOCUMENTS
+</div>
+    <button class="create-btn" onclick="openUploadModal()">
+        + Create / Upload Document
+    </button>
+</div>
+
+<div class="search-box">
+    <input type="text" id="searchInput" placeholder="🔎 Search documents...">
+</div>
+
+<div class="doc-container">
+    <div class="doc-grid" id="docGrid"></div>
+</div>
+
+<!-- PDF MODAL -->
+<div class="modal" id="pdfModal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closePDFModal()">✖</span>
+        <iframe id="pdfFrame"></iframe>
+    </div>
+</div>
+
+<!-- UPLOAD MODAL -->
+<div class="modal" id="uploadModal">
+    <div class="upload-modal-content">
+        <span class="close-btn" onclick="closeUploadModal()" style="color:white;">✖</span>
+        <h2 style="color:#00E5FF;margin-bottom:20px;">Upload Document</h2>
+
+        <label for="title">DOCUMENT TITLE</label>
+        <input type="text" id="title" placeholder="Document Title">
+        <label for="description">DESCRIPTION</label>
+        <input type="text" id="description" placeholder="Description">
+        <label for="pdfFile">UPLOAD PDF FILE</label>
+        <input type="file" id="pdfFile" accept="application/pdf">
+
+        <button onclick="uploadDocument()">Upload PDF</button>
+    </div>
+</div>
+
+<script>
+function goDashboard(){ window.location.href="dashboard.html"; }
+function goProfile(){ window.location.href="profile.html"; }
+
+
+const API_URL="http://localhost:5000";
+
+/* Format File Size */
+function formatFileSize(bytes){
+    if(!bytes) return "0 KB";
+    if(bytes < 1024) return bytes + " B";
+    if(bytes < 1024*1024) return (bytes/1024).toFixed(2)+" KB";
+    return (bytes/(1024*1024)).toFixed(2)+" MB";
+}
+
+/* Format Date + Time */
+function formatDateTime(dateString){
+    if(!dateString) return "N/A";
+
+    const date = new Date(dateString);
+
+    const options = {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
+    };
+
+    return date.toLocaleString("en-IN", options);
+}
+
+/* Load Documents */
+async function loadDocuments(){
+
+    const employee_id = localStorage.getItem("employee_id");
+
+    try{
+        const res = await fetch(API_URL + "/documents", {
+            headers: {
+                "employee_id": employee_id   // ✅ REQUIRED
+            }
+        });
+
+        if(!res.ok){
+            throw new Error("API error");
+        }
+
+        const data = await res.json();
+
+        const grid = document.getElementById("docGrid");
+        grid.innerHTML = "";
+
+        const role = localStorage.getItem("role");
+
+        data.forEach(doc => {
+
+            let actions = "";
+
+            if(role === "admin"){
+                actions = `
+                <div class="doc-actions">
+                    <button class="view-btn" onclick="previewPDF('${doc.file_name}')">View</button>
+                    <button class="download-btn" onclick="downloadFile('${doc.file_name}')">Download</button>
+                </div>`;
+            }
+
+            grid.innerHTML += `
+            <div class="doc-card">
+                <div class="doc-info">
+                    <div class="doc-title">${doc.title}</div>
+                    <div class="doc-desc">${doc.description || ""}</div>
+                    <div class="doc-meta">
+                        📅 ${formatDateTime(doc.created_at)} |
+                        📦 ${formatFileSize(doc.file_size)}
+                    </div>
+                </div>
+                ${actions}
+            </div>
+            `;
+        });
+
+    }catch(err){
+        console.log("ERROR:", err);
+        document.getElementById("docGrid").innerHTML = "Error loading documents";
+    }
+}
+
+
+
+async function downloadFile(fileName){
+
+    const employee_id = localStorage.getItem("employee_id");
+
+    const res = await fetch(API_URL + "/download/" + fileName, {
+        headers: {
+            "employee_id": employee_id
+        }
+    });
+
+    if(!res.ok){
+        alert("Access Denied");
+        return;
+    }
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    a.click();
+}
+
+
+
+/* Upload Modal Controls */
+function openUploadModal(){
+    document.getElementById("title").value="";
+    document.getElementById("description").value="";
+    document.getElementById("pdfFile").value="";
+    document.getElementById("uploadModal").style.display="block";
+}
+
+function closeUploadModal(){
+    document.getElementById("uploadModal").style.display="none";
+}
+
+/* Upload */
+async function uploadDocument(){
+    const title=document.getElementById("title").value;
+    const description=document.getElementById("description").value;
+    const file=document.getElementById("pdfFile").files[0];
+
+    if(!title || !file){
+        alert("Title and PDF required");
+        return;
+    }
+
+    const formData=new FormData();
+    formData.append("title",title);
+    formData.append("description",description);
+    formData.append("pdf",file);
+
+    await fetch(API_URL+"/upload-document",{
+        method:"POST",
+        body:formData
+    });
+
+    alert("Uploaded Successfully");
+    closeUploadModal();
+    loadDocuments();
+}
+
+/* Preview */
+function previewPDF(fileName){
+    document.getElementById("pdfFrame").src =
+        API_URL + "/uploads/" + fileName;
+    document.getElementById("pdfModal").style.display="block";
+}
+
+function closePDFModal(){
+    document.getElementById("pdfModal").style.display="none";
+    document.getElementById("pdfFrame").src="";
+}
+
+/* Search */
+document.getElementById("searchInput")
+.addEventListener("keyup",function(){
+    const filter=this.value.toLowerCase();
+    const cards=document.querySelectorAll(".doc-card");
+
+    cards.forEach(card=>{
+        const text=card.textContent.toLowerCase();
+        card.style.display=text.includes(filter)?"flex":"none";
+    });
+});
+
+loadDocuments();
+
+
+</script>
+
+</body>
+</html>

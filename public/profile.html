@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>My Profile</title>
+
+<style>
+
+body{
+    font-family:'Segoe UI';
+    background:#0a192f;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+  padding-top:160px; 
+    margin:0;
+}
+
+/* PROFILE BOX */
+.profile-container{
+    position:relative;
+    width:500px;
+    padding:35px;
+    border-radius:18px;
+
+    background:
+        linear-gradient(#020617,#020617) padding-box,
+        linear-gradient(135deg,#00e5ff,#0072ff) border-box;
+
+    border:2px solid transparent;
+}
+
+
+/* CLOSE BUTTON */
+.close-btn{
+    position:absolute;
+    top:15px;
+    right:15px;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:#ff0033;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+    font-size:18px;
+
+    box-shadow:
+        0 0 10px red,
+        0 0 25px red,
+        0 0 40px rgba(255,0,0,0.6);
+}
+
+/* TITLE NEON */
+.title{
+    text-align:left;
+    font-size:26px;
+    margin-bottom:20px;
+    font-weight:bold;
+    color:#00e5ff;
+
+    text-shadow:
+        0 0 2px #00e5ff,
+        0 0 2px #00e5ff,
+        0 0 2px #00e5ff,
+        0 0 2px #00c6ff;
+}
+
+/* AVATAR */
+.avatar{
+    width:90px;
+    height:90px;
+    margin:15px auto;
+    border-radius:50%;
+    background:linear-gradient(135deg,#00c6ff,#0072ff);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:36px;
+    font-weight:bold;
+
+    box-shadow:
+        0 0 15px #00c6ff,
+        0 0 30px #0072ff;
+}
+
+.label{
+    margin-top:18px;
+    font-size:13px;
+    color:#00e5ff;
+}
+
+/* INPUT */
+.input-box{
+    margin-top:6px;
+    background:#020617;
+    border:1px solid #00e5ff55;
+    border-radius:10px;
+    padding:13px;
+
+    box-shadow:
+        inset 0 0 8px rgba(0,255,255,0.1);
+}
+
+.input-box input{
+    background:none;
+    border:none;
+    outline:none;
+    color:white;
+    width:100%;
+}
+
+/* BUTTON */
+.btn{
+    margin-top:25px;
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(90deg,#004aad,#00c6ff);
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+
+    box-shadow:
+        0 0 10px #00c6ff,
+        0 0 25px rgba(0,198,255,0.6);
+}
+
+.btn:hover{
+    transform:scale(1.03);
+    box-shadow:
+        0 0 15px #00e5ff,
+        0 0 35px #00c6ff;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="profile-container">
+
+    <div class="close-btn" onclick="closeProfile()">✖</div>
+
+    <div class="title">MY PROFILE</div>
+
+    <div class="avatar" id="avatar">U</div>
+
+    <!-- EMPLOYEE ID -->
+    <div class="label">EMPLOYEE ID</div>
+    <div class="input-box">
+        <input type="text" id="employee_id" placeholder="Enter ID">
+    </div>
+
+    <!-- NAME -->
+    <div class="label">FULL NAME</div>
+    <div class="input-box">
+        <input type="text" id="name" oninput="updateAvatar()" placeholder="Enter Name">
+    </div>
+
+    <!-- EMAIL -->
+    <div class="label">EMAIL</div>
+    <div class="input-box">
+        <input type="email" id="email" placeholder="Enter Email">
+    </div>
+
+    <!-- PHONE -->
+    <div class="label">PHONE</div>
+    <div class="input-box">
+        <input type="text" id="phone" placeholder="Enter Phone">
+    </div>
+
+    <!-- DEPARTMENT -->
+    <div class="label">DEPARTMENT</div>
+    <div class="input-box">
+        <input type="text" id="department" placeholder="Enter Department">
+    </div>
+
+    <!-- PASSWORD -->
+    <div class="label">CHANGE PASSWORD</div>
+    <div class="input-box">
+        <input type="password" id="password" placeholder="New password">
+    </div>
+
+    <button class="btn" onclick="updateProfile()">UPDATE PROFILE</button>
+
+</div>
+
+<script>
+
+/* AVATAR */
+function updateAvatar(){
+    let name = document.getElementById("name").value;
+    document.getElementById("avatar").innerText =
+        name ? name.charAt(0).toUpperCase() : "U";
+}
+
+/* UPDATE PROFILE */
+function updateProfile(){
+
+    const employee_id = document.getElementById("employee_id").value;
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const phone = document.getElementById("phone").value;
+    const department = document.getElementById("department").value;
+    const password = document.getElementById("password").value;
+
+    /* PROFILE SAVE */
+    fetch("http://localhost:5000/update-profile",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({
+            employee_id,
+            name,
+            email,
+            phone,
+            department
+        })
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        alert(data.message);
+    });
+
+    /* PASSWORD UPDATE */
+    if(password.trim() !== ""){
+        fetch("http://localhost:5000/update-password",{
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body:JSON.stringify({
+                employee_id,
+                newpassword: password
+            })
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            alert(data.message);
+            document.getElementById("password").value = "";
+        });
+    }
+}
+
+/* CLOSE */
+function closeProfile(){
+    window.location.href="dashboard.html";
+}
+
+</script>
+
+</body>
+</html>

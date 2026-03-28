@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Task Manager</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI;
+    background:#07132b;
+    color:white;
+    font-size:17px;
+}
+
+/* ===== TOP BAR ===== */
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 50px;
+    border-bottom:1px solid #1f2c4f;
+}
+
+.back-btn{
+    background:#0e1a35;
+    color:white;
+    border:1px solid #00e5ff;
+    padding:8px 18px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.center-title{
+    font-size:24px;
+    font-weight:700;
+    color:#00FFFF;   /* Neon Cyan */
+}
+
+.logo-center{
+    font-size:24px;
+    font-weight:700;
+    color:#00FFFF;   /* Neon Cyan */
+    letter-spacing:1px;
+    text-transform:uppercase;
+
+    /* Glow Effect */
+    text-shadow:
+        0 0 5px #00FFFF,
+        0 0 15px #00FFFF,
+        0 0 30px #00FFFF;
+}
+
+.admin-btn{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    background:#18ff4b;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    text-align:center;
+    color:#07132b;
+    font-weight:600;
+}
+
+/* ===== PAGE HEADER ===== */
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:30px 50px 15px 50px;
+    border-bottom:1px solid #1f2c4f;
+}
+
+.page-title{
+display:flex;
+align-items:center;
+gap:12px;
+
+font-size:30px;
+font-weight:700;
+color:#00e5ff;
+letter-spacing:1px;
+}
+
+.icon-svg svg{
+width:46px;
+height:46px;
+
+filter: drop-shadow(0 0 1px #00e5ff)
+        drop-shadow(0 0 1px #00e5ff);
+}
+.create-btn{
+    background:#18ff4b;
+    border:none;
+    padding:12px 22px;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+/* ===== FILTERS ===== */
+.filters{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 50px;
+}
+
+.filter-buttons button{
+    margin-right:10px;
+    padding:10px 18px;
+    border:1px solid #00e5ff;
+    background:transparent;
+    color:#00e5ff;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.filter-buttons button.active{
+    background:#00e5ff;
+    color:#07132b;
+}
+
+/* ===== TASK LIST ===== */
+#taskList{
+    padding:30px 50px 50px 50px;
+}
+
+.card{
+    background:#0e1a35;
+    padding:25px;
+    margin-top:15px;
+    border-left:5px solid red;
+    border-radius:12px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.card small{
+    color:#9aa4b2;
+    display:block;
+    margin-top:4px;
+}
+
+button{
+    padding:8px 14px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-left:6px;
+}
+
+/* BUTTON COLORS */
+.pending{background:#ff6b00;color:white;}
+.progress{background:#ffc400;}
+.complete{background:#18ff4b;}
+.delete{background:#ff003c;color:white;}
+
+/* ===== MODAL ===== */
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.85);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.modal-content{
+    background:#0e1a35;
+    width:500px;
+    max-width:90%;
+    padding:40px;
+    border-radius:14px;
+
+    max-height:80vh;   /* limit modal height */
+    overflow-y:auto;   /* enable vertical scroll */
+}
+
+.modal-content::-webkit-scrollbar{
+    width:6px;
+}
+
+.modal-content::-webkit-scrollbar-thumb{
+    background:#00e5ff;
+    border-radius:10px;
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select{
+    width:100%;
+    margin-bottom:15px;
+    padding:12px;
+    border-radius:8px;
+    border:none;
+    font-size:16px;
+    outline:none;
+}
+
+.modal-buttons{
+    display:flex;
+    justify-content:flex-end;
+    gap:15px;
+}
+
+.cancel-btn{background:#ff003c;color:white;}
+.save-btn{background:#18ff4b;}
+
+
+
+/* ===== BUTTON COLORS + GLOW ===== */
+button{
+    padding:8px 14px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    margin-left:6px;
+    transition:all 0.3s ease;
+}
+/* ===== BACK BUTTON ====*/
+.dashboard-btn:active,
+.sa-combined-btn:active{
+    transform: scale(0.95);
+    box-shadow: 0 0 15px #00E5FF,
+                inset 0 0 20px rgba(0,0,0,0.4);
+}
+
+/* Optional: keep filled look while focused */
+.dashboard-btn:focus,
+.sa-combined-btn:focus{
+    outline: none;
+    box-shadow: 0 0 12px #00E5FF,
+                0 0 30px rgba(0,229,255,0.7);
+}
+
+/* ===== CREATE BUTTON ===== */
+.create-btn{
+    background:#18ff4b;
+    box-shadow:0 0 8px #18ff4b;
+}
+
+.create-btn:hover{
+    box-shadow:0 0 15px #18ff4b, 0 0 30px #18ff4b;
+}
+
+/* ===== FILTER BUTTONS ===== */
+.filter-buttons button{
+    border:1px solid #00e5ff;
+    background:transparent;
+    color:#00e5ff;
+    box-shadow:0 0 6px #00e5ff;
+}
+
+.filter-buttons button:hover{
+    box-shadow:0 0 15px #00e5ff, 0 0 25px #00e5ff;
+}
+
+.filter-buttons button.active{
+    background:#00e5ff;
+    color:#07132b;
+    box-shadow:0 0 15px #00e5ff, 0 0 30px #00e5ff;
+}
+
+/* ===== TASK ACTION BUTTONS ===== */
+
+.pending{
+    background:#ff6b00;
+    color:white;
+    box-shadow:0 0 8px #ff6b00;
+}
+.pending:hover{
+    box-shadow:0 0 15px #ff6b00, 0 0 30px #ff6b00;
+}
+
+.progress{
+    background:#ffc400;
+    box-shadow:0 0 8px #ffc400;
+}
+.progress:hover{
+    box-shadow:0 0 15px #ffc400, 0 0 30px #ffc400;
+}
+
+.complete{
+    background:#18ff4b;
+    box-shadow:0 0 8px #18ff4b;
+}
+.complete:hover{
+    box-shadow:0 0 15px #18ff4b, 0 0 30px #18ff4b;
+}
+
+.delete{
+    background:#ff003c;
+    color:white;
+    box-shadow:0 0 8px #ff003c;
+}
+.delete:hover{
+    box-shadow:0 0 15px #ff003c, 0 0 30px #ff003c;
+}
+
+/* ===== MODAL BUTTONS ===== */
+.cancel-btn{
+    background:#ff003c;
+    color:white;
+    box-shadow:0 0 8px #ff003c;
+}
+.cancel-btn:hover{
+    box-shadow:0 0 15px #ff003c, 0 0 30px #ff003c;
+}
+
+.save-btn{
+    background:#18ff4b;
+    box-shadow:0 0 8px #18ff4b;
+}
+.save-btn:hover{
+    box-shadow:0 0 15px #18ff4b, 0 0 30px #18ff4b;
+}
+
+.dashboard-btn{
+    background:transparent;
+    border:2px solid #00E5FF;
+    color:white;
+    padding:6px 15px;
+    border-radius:25px;
+    cursor:pointer;
+}
+
+.sa-combined-btn{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border:2px solid #00E5FF;
+    background:transparent;
+    color:white;
+    font-weight:bold;
+    padding:6px 15px;
+    border-radius:30px;
+    cursor:pointer;
+}
+
+.sa-mini-circle{
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    border:2px solid #00E5FF;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    font-size:13px;
+}
+
+.form-group{
+display:flex;
+flex-direction:column;
+gap:10px;
+width:320px;
+}
+
+label{
+font-weight:600;
+font-size:14px;
+color:#00eaff;
+}
+
+input, textarea, select{
+padding:8px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+    <button class="dashboard-btn" onclick="goDashboard()"> Back</button>
+    <div class="logo-center">TGiCCC</div>
+    <button class="sa-combined-btn" onclick="goSystemAdministration()">
+        
+        <span>👤 Profile</span>
+    </button>
+</div>
+
+<div class="page-header">
+    <div>
+        <div class="page-title">
+  <span class="icon-svg">
+    <svg viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="4" width="18" height="16" rx="2" stroke="#00e5ff" stroke-width="2"/>
+      <line x1="7" y1="9" x2="17" y2="9" stroke="#00e5ff" stroke-width="2"/>
+      <line x1="7" y1="13" x2="13" y2="13" stroke="#00e5ff" stroke-width="2"/>
+      <circle cx="17" cy="13" r="2" fill="#00e5ff"/>
+    </svg>
+  </span>
+  TASK MANAGER
+</div>
+             <p class="page-subtitle">Assign and track tasks</p>
+    </div>
+
+    <button class="create-btn" onclick="openModal()">
+        + Create Task
+    </button>
+</div>
+
+<div class="filters">
+    <div class="filter-buttons">
+        <button onclick="setFilter('ALL',this)" class="active">All</button>
+        <button onclick="setFilter('PENDING',this)">Pending</button>
+        <button onclick="setFilter('IN_PROGRESS',this)">In Progress</button>
+        <button onclick="setFilter('COMPLETED',this)">Completed</button>
+    </div>
+</div>
+
+<div id="taskList"></div>
+
+<!-- MODAL -->
+<div id="taskModal" class="modal" onclick="outsideClick(event)">
+  <div class="modal-content">
+    <h2>Create Task</h2>
+    <form id="taskForm">
+      <label for="title">TASK TITLE *</label>
+      <input type="text" id="title" placeholder="Task Title *" required>
+      <label for="description">DESCRIPTION</label>
+      <textarea id="description" placeholder="Description"></textarea>
+      <label for="due_date">DUE DATE</label>
+      <input type="date" id="due_date">
+      <label for="assigned_to">ASSIGNED TO</label>
+      <input type="text" id="assigned_to" placeholder="Assigned To">
+      <label for="priority">Select PRIORITY</label>
+      <select id="priority">
+        <option value="LOW">LOW</option>
+        <option value="MEDIUM">MEDIUM</option>
+        <option value="HIGH">HIGH</option>
+      </select>
+
+      <div class="modal-buttons">
+        <button type="button" onclick="closeModal()" class="cancel-btn">Cancel</button>
+        <button type="submit" class="save-btn">Save Task</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function goDashboard(){ window.location.href="dashboard.html"; }
+function goSystemAdministration(){ window.location.href="profile.html"; }
+
+const API="http://localhost:5000/tasks";
+let currentStatus="ALL";
+let allTasks=[];
+
+function formatDateTime(dateString){
+    if(!dateString) return "-";
+    const date=new Date(dateString);
+
+    const day=String(date.getDate()).padStart(2,'0');
+    const month=String(date.getMonth()+1).padStart(2,'0');
+    const year=date.getFullYear();
+    const hours=String(date.getHours()).padStart(2,'0');
+    const minutes=String(date.getMinutes()).padStart(2,'0');
+
+    return `${day}-${month}-${year} ${hours}:${minutes}`;
+}
+
+async function loadTasks(status="ALL"){
+    currentStatus=status;
+    const res=await fetch(`${API}?status=${status}`);
+    allTasks=await res.json();
+    renderTasks(allTasks);
+}
+
+function renderTasks(data){
+    const container=document.getElementById("taskList");
+    container.innerHTML="";
+    data.forEach(task=>{
+        container.innerHTML+=`
+        <div class="card">
+            <div>
+                <h2>${task.title}</h2>
+                <p>${task.description||""}</p>
+                <small>Due: ${formatDateTime(task.due_date)}</small>
+                <small>Created: ${formatDateTime(task.created_at)}</small>
+                <small>Status: ${task.status}</small>
+                <small>Completed: ${formatDateTime(task.completed_at)}</small>
+                <small>Time Taken: ${calculateTimeTaken(task.created_at, task.completed_at)}</small>
+            </div>
+            <div>
+                <button class="pending"
+                    onclick="updateStatus(${task.id},'PENDING')">
+                    Pending
+                </button>
+
+                <button class="progress"
+                    onclick="updateStatus(${task.id},'IN_PROGRESS')">
+                    In Progress
+                </button>
+
+                <button class="complete"
+                    onclick="updateStatus(${task.id},'COMPLETED')">
+                    Complete
+                </button>
+
+                <button class="delete"
+                    onclick="deleteTask(${task.id})">
+                    Delete
+                </button>
+            </div>
+        </div>`;
+    });
+}
+
+async function updateStatus(id,status){
+
+const res = await fetch(`${API}/${id}/status`,{
+method:"PUT",
+headers:{
+"Content-Type":"application/json",
+"employee_id": localStorage.getItem("employee_id")   // ✅ REQUIRED
+},
+body: JSON.stringify({status})
+});
+
+const data = await res.json();
+
+if(!res.ok){
+alert(data.message || "Update failed");
+return;
+}
+
+loadTasks(currentStatus);
+
+}
+
+function calculateTimeTaken(created, completed){
+    if(!completed) return "-";
+    const start=new Date(created);
+    const end=new Date(completed);
+    const diff=end-start;
+    const hours=Math.floor(diff/(1000*60*60));
+    const minutes=Math.floor((diff%(1000*60*60))/(1000*60));
+    return `${hours}h ${minutes}m`;
+}
+
+async function deleteTask(id){
+
+if(!confirm("Are you sure to delete this task?")) return;
+
+const res = await fetch(`${API}/${id}`,{
+method:"DELETE",
+headers:{
+"employee_id": localStorage.getItem("employee_id")   // ✅ REQUIRED
+}
+});
+
+const data = await res.json();
+
+if(!res.ok){
+alert(data.message || "Delete failed");
+return;
+}
+
+loadTasks(currentStatus);
+
+}
+
+function openModal(){
+    document.getElementById("taskForm").reset();
+    document.getElementById("taskModal").style.display="flex";
+}
+
+function closeModal(){
+    document.getElementById("taskModal").style.display="none";
+}
+
+function outsideClick(e){
+    if(e.target.id==="taskModal"){closeModal();}
+}
+
+document.getElementById("taskForm").addEventListener("submit",async function(e){
+    e.preventDefault();
+    const title=document.getElementById("title").value.trim();
+    const description=document.getElementById("description").value;
+    const due_date=document.getElementById("due_date").value;
+    const assigned_to=document.getElementById("assigned_to").value;
+    const priority=document.getElementById("priority").value;
+
+    if(!title){alert("Title required");return;}
+
+    await fetch(API,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({title,description,due_date,assigned_to,priority})
+    });
+
+    closeModal();
+    loadTasks(currentStatus);
+});
+
+function setFilter(status,btn){
+    document.querySelectorAll(".filter-buttons button")
+    .forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    loadTasks(status);
+}
+
+loadTasks();
+</script>
+
+</body>
+</html>

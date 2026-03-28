@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Events</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+html, body{
+    height:100%;
+    margin:0;
+    font-family:Segoe UI,sans-serif;
+    background:#07132b;
+    color:white;
+}
+
+/* HEADER */
+.header{
+    height:70px;
+    background:#081c3a;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 25px;
+    border-bottom:2px solid #00eaff;
+}
+
+.back-btn{
+    background:transparent;
+    border:2px solid #00eaff;
+    color:#00eaff;
+    padding:6px 14px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.back-btn:hover{
+    background:#00eaff;
+    color:#07132b;
+}
+
+.center-heading{
+    font-size:22px;
+    font-weight:bold;
+    color:#00eaff;
+}
+
+.sa-btn{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#0f1f45;
+    border:2px solid #00eaff;
+    padding:6px 14px;
+    border-radius:25px;
+    cursor:pointer;
+}
+
+.sa-btn:hover{
+    background:#00eaff;
+    color:#07132b;
+}
+
+.sa-circle{
+    width:28px;
+    height:28px;
+    background:#00eaff;
+    color:#07132b;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    font-weight:bold;
+}
+
+/* TITLE */
+.title-section{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:30px 40px 10px 40px;
+}
+
+.title-left h2{
+    margin:0;
+    color:#00eaff;
+}
+
+.title-heading{
+display:flex;
+align-items:center;
+gap:10px;
+font-size:28px;     /* 🔥 increase text size */
+font-weight:700;
+letter-spacing:1px;
+color:#00eaff;
+}
+
+.icon-svg svg{
+width:52px;   /* increase if needed */
+height:52px;
+
+filter: drop-shadow(0 0 6px #00eaff)
+        drop-shadow(0 0 12px #00eaff);
+}
+
+.title-left p{
+    margin:5px 0 0 0;
+    color:#9bb3c9;
+}
+
+.create-btn-top{
+    background:#00c853;
+    color:white;
+    border:none;
+    padding:8px 18px;
+    border-radius:6px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.create-btn-top:hover{
+    background:#00e676;
+}
+
+/* EVENTS */
+.main{
+    padding:20px 40px 40px 40px;
+}
+
+.events-container{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.event-card{
+    background:#0b1c3f;
+    padding:18px;
+    border-radius:10px;
+    border:1px solid #00eaff;
+}
+
+.btn{
+    padding:6px 12px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    margin-right:6px;
+    font-size:12px;
+}
+
+.edit-btn{ background:#007bff; color:white; }
+.delete-btn{ background:#ff1f4b; color:white; }
+
+.edit-btn:hover{ background:#3399ff; }
+.delete-btn:hover{ background:#ff4d6d; }
+
+/* MODAL */
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.85);
+    backdrop-filter:blur(5px);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.modal-box{
+    width:520px;
+    max-width:90%;
+    max-height:85vh;
+    overflow-y:auto;
+    background:#0c1c3f;
+    padding:28px;
+    border-radius:14px;
+    border:2px solid #00eaff;
+    box-shadow:0 0 20px rgba(0,255,255,0.5);
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+/* Fix calendar icon (date) */
+input[type="date"]::-webkit-calendar-picker-indicator{
+    filter: invert(1);   /* 🔥 makes icon white */
+    cursor:pointer;
+}
+
+/* Fix clock icon (time) */
+input[type="time"]::-webkit-calendar-picker-indicator{
+    filter: invert(1);
+    cursor:pointer;
+}
+
+.modal-title{
+    font-size:20px;
+    font-weight:bold;
+    color:#00eaff;
+}
+
+.close-btn{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    border:2px solid red;
+    color:red;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+}
+
+.divider{
+    height:1px;
+    background:#00eaff;
+    margin:15px 0 20px 0;
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:6px;
+    color:#00eaff;
+    font-weight:bold;
+    font-size:13px;
+}
+
+.form-group input,
+.form-group textarea{
+    width:100%;
+    padding:12px;
+    background:#07132b;
+    border:1px solid #00ffff;
+    border-radius:8px;
+    color:white;
+    font-size:14px;
+    outline:none;
+    cursor:text;
+}
+
+.form-group textarea{
+    height:120px;
+    resize:vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus{
+    border-color:#00eaff;
+    box-shadow:0 0 6px #00eaff;
+}
+
+.create-btn{
+    width:100%;
+    padding:12px;
+    background:linear-gradient(90deg,#00c6ff,#00eaff);
+    border:none;
+    border-radius:8px;
+    color:#07132b;
+    font-weight:bold;
+    font-size:15px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <button class="back-btn" onclick="goBack()"> Back</button>
+    <div class="center-heading">TGICCC</div>
+    <div class="sa-btn" onclick="goSA()">
+ 
+        <div>👤 Profile</div>
+    </div>
+</div>
+
+<div class="title-section">
+    <div class="title-left">
+        <h2 class="title-heading">
+  <span class="icon-svg">
+    <svg viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="5" width="18" height="16" rx="2" stroke="#00eaff" stroke-width="2"/>
+      <line x1="3" y1="10" x2="21" y2="10" stroke="#00eaff" stroke-width="2"/>
+      <line x1="8" y1="3" x2="8" y2="7" stroke="#00eaff" stroke-width="2"/>
+      <line x1="16" y1="3" x2="16" y2="7" stroke="#00eaff" stroke-width="2"/>
+    </svg>
+  </span>
+  EVENTS CALENDAR
+</h2>
+        <p>Upcoming events and activities</p>
+    </div>
+    <button class="create-btn-top" onclick="openModal()">+ Create Event</button>
+</div>
+
+<div class="main">
+    <div class="events-container" id="eventsContainer"></div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">CREATE EVENT</div>
+      <div class="close-btn" onclick="closeModal()">✕</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="form-group">
+      <label>EVENT TITLE</label>
+      <input type="text" id="title">
+    </div>
+
+    <div class="form-group">
+      <label>DESCRIPTION</label>
+      <textarea id="description"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>DATE</label>
+      <input type="date" id="date">
+    </div>
+
+    <div class="form-group">
+      <label>TIME</label>
+      <input type="time" id="time">
+    </div>
+
+    <div class="form-group">
+      <label>LOCATION</label>
+      <input type="text" id="location">
+    </div>
+
+    <button class="create-btn" onclick="saveEvent()">SAVE EVENT</button>
+
+  </div>
+</div>
+
+<script>
+
+const API = "http://localhost:5000/api/events";
+let editId = null;
+
+/* BACK BUTTON */
+function goBack(){
+    window.location.href = "dashboard.html";
+}
+
+/* profile BUTTON */
+function goSA(){
+    window.location.href = "profile.html";
+}
+
+/* OPEN MODAL */
+function openModal(){
+    editId = null;
+    document.getElementById("modalTitle").innerText = "Create Event";
+    document.getElementById("modal").style.display = "flex";
+    clearForm();
+}
+
+/* CLOSE MODAL */
+function closeModal(){
+    document.getElementById("modal").style.display = "none";
+}
+
+/* CLEAR FORM */
+function clearForm(){
+    document.getElementById("title").value="";
+    document.getElementById("description").value="";
+    document.getElementById("date").value="";
+    document.getElementById("time").value="";
+    document.getElementById("location").value="";
+}
+
+/* LOAD EVENTS */
+async function loadEvents(){
+    const res = await fetch(API);
+    const result = await res.json();
+    const container = document.getElementById("eventsContainer");
+    container.innerHTML="";
+
+    result.data.forEach(event=>{
+        const formattedDate = event.event_date ? event.event_date.split("T")[0] : "";
+        const formattedTime = event.event_time
+            ? new Date(`1970-01-01T${event.event_time}`)
+              .toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:true})
+            : "";
+
+        container.innerHTML+=`
+        <div class="event-card">
+            <h3>${event.title}</h3>
+            <p><strong>Date & Time :</strong> ${formattedDate} • ${formattedTime}</p>
+            <p><strong>Description :</strong> ${event.description || ""}</p>
+            <p><strong>Location :</strong> ${event.location}</p>
+            <button class="btn edit-btn" onclick="editEvent(${event.id})">Edit</button>
+            <button class="btn delete-btn" onclick="deleteEvent(${event.id})">Delete</button>
+        </div>`;
+    });
+}
+
+/* EDIT */
+async function editEvent(id){
+    const res = await fetch(API);
+    const result = await res.json();
+    const event = result.data.find(e => e.id == id);
+
+    editId = id;
+    document.getElementById("modalTitle").innerText = "Edit Event";
+    document.getElementById("modal").style.display = "flex";
+
+    document.getElementById("title").value = event.title || "";
+    document.getElementById("description").value = event.description || "";
+    document.getElementById("date").value = event.event_date ? event.event_date.split("T")[0] : "";
+    document.getElementById("time").value = event.event_time ? event.event_time.substring(0,5) : "";
+    document.getElementById("location").value = event.location || "";
+}
+
+/* SAVE */
+async function saveEvent(){
+
+const titleVal = document.getElementById("title").value.trim();
+const descVal  = document.getElementById("description").value.trim();
+const dateVal  = document.getElementById("date").value;
+const timeVal  = document.getElementById("time").value;
+const locVal   = document.getElementById("location").value.trim();
+
+if(!titleVal || !descVal || !dateVal || !timeVal || !locVal){
+alert("All fields required");
+return;
+}
+
+const data = {
+title: titleVal,
+description: descVal,
+date: dateVal,
+time: timeVal,
+location: locVal
+};
+
+let res;
+
+try{
+
+if(editId){
+
+// 🔥 UPDATE EVENT (ADMIN ONLY)
+res = await fetch(`${API}/${editId}`,{
+method:"PUT",
+headers:{
+"Content-Type":"application/json",
+"employee_id": localStorage.getItem("employee_id")   // ✅ REQUIRED
+},
+body: JSON.stringify(data)
+});
+
+}else{
+
+// CREATE EVENT
+res = await fetch(API,{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body: JSON.stringify(data)
+});
+
+}
+
+const result = await res.json();
+
+if(!res.ok){
+alert(result.message || "Update failed");
+return;
+}
+
+alert(editId ? "Event Updated Successfully" : "Event Created Successfully");
+
+closeModal();
+loadEvents();
+
+}catch(err){
+console.log(err);
+alert("Server error");
+}
+
+}
+
+/* DELETE */
+async function deleteEvent(id){
+
+if(!confirm("Are you sure to delete?")) return;
+
+const res = await fetch(`${API}/${id}`,{
+method:"DELETE",
+headers:{
+"employee_id": localStorage.getItem("employee_id")   // ✅ FIX
+}
+});
+
+const data = await res.json();
+
+if(!res.ok){
+alert(data.message || "Delete failed");
+return;
+}
+
+loadEvents();
+
+}
+
+
+loadEvents();
+
+</script>
+
+</body>
+</html>

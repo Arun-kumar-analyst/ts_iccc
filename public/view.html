@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Event Gallery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI, sans-serif;
+    background:#07132b;
+    color:white;
+}
+
+/* ===== HEADER ===== */
+.topbar{
+    position:relative;
+    height:70px;
+    border-bottom:2px solid rgba(0,224,255,0.6);
+    box-shadow:0 3px 15px rgba(0,224,255,0.2);
+}
+
+.Gallery-btn{
+    position:absolute;
+    left:20px;
+    top:50%;
+    transform:translateY(-50%);
+    background:#00e0ff;
+    color:#07132b;
+    padding:8px 18px;
+    border:none;
+    border-radius:20px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.logo-center{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%, -50%);
+    color:#00e0ff;
+    font-size:26px;
+    letter-spacing:4px;
+    font-weight:bold;
+}
+
+.sa-combined-btn{
+    position:absolute;
+    right:20px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#0b1c3d;
+    border:1px solid #00e0ff;
+    color:#00e0ff;
+    padding:8px 18px;
+    border-radius:30px;
+    cursor:pointer;
+}
+
+.sa-mini-circle{
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:#00e0ff;
+    color:#07132b;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:12px;
+    font-weight:bold;
+}
+
+/* ===== SUBHEADING ===== */
+.event-subheading{
+    padding:20px 40px 0 40px;
+}
+
+.event-subheading h2{
+    margin:0;
+    padding-left:14px;
+    border-left:4px solid #00e0ff;
+    font-size:22px;
+}
+
+/* ===== UPLOAD ===== */
+.upload-box{
+    margin:20px 40px;
+    padding:20px;
+    background:#0b1c3d;
+    border:1px solid rgba(0,224,255,0.3);
+    border-radius:15px;
+}
+
+.upload-box button{
+    background:#00e0ff;
+    border:none;
+    padding:10px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+/* ===== GRID ===== */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+    gap:25px;
+    padding:20px 60px 60px 60px;
+}
+
+.grid img{
+    width:100%;
+    height:220px;   /* Medium height */
+   object-fit:contain; 
+    border-radius:15px;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.grid img:hover{
+    transform:scale(1.05);
+}
+
+.card{
+    background:linear-gradient(145deg,#0b1c3d,#07132b);
+    border:2px solid #00e0ff;   /* increased border */
+    border-radius:20px;
+    padding:40px;
+    text-align:center;
+    transition:0.3s ease;
+}
+
+/* ===== MODAL ===== */
+.modal{
+    display:none;
+    position:fixed;
+    z-index:1000;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.95);
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content{
+    max-width:90%;
+    max-height:90%;
+    border-radius:10px;
+}
+
+.close{
+    position:absolute;
+    top:20px;
+    right:30px;
+    font-size:40px;
+    color:white;
+    cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+    <button class="Gallery-btn" onclick="goGallery()"> Back</button>
+    <div class="logo-center">TGiCCC</div>
+    <button class="sa-combined-btn" onclick="goSystemAdministration()">
+         
+        <span>👤 Profile</span>
+    </button>
+</div>
+
+<div class="event-subheading">
+    <h2>TGICCC Gallery</h2>
+</div>
+
+<div class="upload-box">
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="photoInput" name="photos" multiple required>
+        <button type="submit">Upload Photos</button>
+    </form>
+</div>
+
+<div class="grid" id="photoGrid"></div>
+
+<!-- IMAGE MODAL -->
+<div id="imageModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImg">
+</div>
+
+<script>
+
+function goGallery(){
+    window.location.href="gallery.html";
+}
+
+function goSystemAdministration(){
+    window.location.href="profile.html";
+}
+
+/* GET EVENT ID */
+const params = new URLSearchParams(window.location.search);
+const eventId = params.get("event");
+
+if(!eventId){
+    document.getElementById("photoGrid").innerHTML =
+        "<p style='padding:20px;color:red;'>Open page like view.html?event=1</p>";
+    throw new Error("Event ID missing");
+}
+
+/* LOAD PHOTOS */
+async function loadPhotos(){
+    try{
+        const response = await fetch(`/photos/${eventId}`);
+        if(!response.ok) throw new Error("Failed to load");
+
+        const photos = await response.json();
+        const grid = document.getElementById("photoGrid");
+        grid.innerHTML="";
+
+        if(photos.length === 0){
+            grid.innerHTML="<p>No photos uploaded yet.</p>";
+            return;
+        }
+
+        photos.forEach(photo=>{
+            const img=document.createElement("img");
+            img.src=`/uploads/${photo.image_path}`;
+
+            img.addEventListener("click", function(){
+                openModal(this.src);
+            });
+
+            grid.appendChild(img);
+        });
+
+    }catch(error){
+        console.error(error);
+    }
+}
+
+/* UPLOAD */
+document.getElementById("uploadForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    const fileInput=document.getElementById("photoInput");
+    if(fileInput.files.length===0){
+        alert("Select file first");
+        return;
+    }
+
+    const formData=new FormData();
+    for(let file of fileInput.files){
+        formData.append("photos", file);
+    }
+
+    try{
+        const response=await fetch(`/upload-photo/${eventId}`,{
+            method:"POST",
+            body:formData
+        });
+
+        if(!response.ok) throw new Error("Upload failed");
+
+        alert("Upload successful");
+        fileInput.value="";
+        loadPhotos();
+
+    }catch(error){
+        console.error(error);
+        alert("Upload failed");
+    }
+});
+
+/* MODAL FUNCTIONS */
+function openModal(src){
+    const modal = document.getElementById("imageModal");
+    const modalImg = document.getElementById("modalImg");
+
+    modal.style.display="flex";
+    modalImg.src=src;
+}
+
+function closeModal(){
+    document.getElementById("imageModal").style.display="none";
+}
+
+loadPhotos();
+
+</script>
+
+</body>
+</html>

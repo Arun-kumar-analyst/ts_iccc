@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>TGiCCC Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI, sans-serif;
+    background:#07132b;
+    color:white;
+}
+
+/* ===== TOPBAR ===== */
+.topbar{
+    background:#081c3a;
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+    border-bottom:1px solid #00eaff;
+}
+
+.logo-area{
+    font-size:1.4rem;
+    color:#00E5FF;
+    font-weight:bold;
+}
+
+.top-right{
+    display:flex;
+    gap:15px;
+}
+
+.logout-btn{
+    background:transparent;
+    border:2px solid red;
+    color:red;
+    padding:6px 15px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.logout-btn:hover{
+    background:red;
+    color:white;
+}
+
+/* ===== SEARCH BOX ===== */
+.search-box{
+    position:relative;
+    width:350px;
+}
+
+.search-box input{
+    width:100%;
+    padding:8px 40px 8px 15px;
+    border-radius:25px;
+    border:1px solid #00eaff;
+    background:#0b1c3f;
+    color:white;
+    outline:none;
+    font-size:14px;
+}
+
+.search-box input::placeholder{
+    color:#9bb3c9;
+}
+
+.search-icon{
+    position:absolute;
+    right:12px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#00E5FF;
+    font-size:14px;
+    pointer-events:none;
+}
+
+/* ===== LAYOUT ===== */
+.dashboard-body{
+    display:flex;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+    width:220px;
+    background:#0C1E4A;
+    padding:30px 15px;
+    min-height:calc(100vh - 70px);
+}
+
+.menu-item{
+    padding:12px 10px;
+    margin-bottom:12px;
+    border-radius:8px;
+    cursor:pointer;
+    color:#b0c7d9;
+    transition:0.3s;
+}
+
+.menu-item:hover,
+.menu-item.active{
+    background:#132B63;
+    color:#00E5FF;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content{
+    flex:1;
+    padding:40px;
+}
+
+.dashboard-title{
+    font-size:2.6rem;
+    color:#00E5FF;
+    margin-bottom:10px;
+}
+
+.welcome-text{
+    color:#b0c7d9;
+    margin-bottom:40px;
+}
+
+/* ===== DASHBOARD CARDS ===== */
+.dashboard-cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:25px;
+}
+
+.dash-card{
+    background:#0b1c3f;
+    padding:25px;
+    border-radius:18px;
+    border:1px solid #00eaff;
+    transition:0.3s;
+}
+
+.dash-card:hover{
+    box-shadow:0 0 20px rgba(0,255,255,0.6);
+    transform:translateY(-5px);
+}
+
+.dash-icon{
+    font-size:22px;
+    margin-bottom:15px;
+}
+
+.dash-number{
+    font-size:2.4rem;
+    font-weight:bold;
+    color:#00E5FF;
+}
+
+.dash-title{
+    margin-top:8px;
+    font-size:0.85rem;
+    letter-spacing:1px;
+    color:#9bb3c9;
+}
+
+.dash-sub{
+    margin-top:6px;
+    font-size:0.85rem;
+    color:#00ff88;
+}
+
+/* ===== ACTION BOXES ===== */
+.action-section {
+    background: linear-gradient(145deg, #020617, #0f172a);
+    border-radius: 25px;
+    padding: 25px;
+    margin: 20px;
+    border: 1px solid rgba(0,255,255,0.15);
+    box-shadow: 
+        0 0 20px rgba(0,255,255,0.15),
+        inset 0 0 15px rgba(255,255,255,0.03);
+    transition: 0.4s;
+}
+
+.action-section:hover {
+    box-shadow: 
+        0 0 30px rgba(0,255,255,0.35),
+        inset 0 0 20px rgba(255,255,255,0.05);
+}
+
+/* HEADER */
+.action-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.action-header svg {
+    color: #00f5ff;
+    filter: drop-shadow(0 0 6px #00f5ff);
+}
+
+/* GRID */
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+}
+
+/* CARD */
+.action-card {
+    background: #0f172a;
+    border-radius: 20px;
+    padding: 30px 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* HOVER */
+.action-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 0 20px rgba(0,255,255,0.4);
+}
+
+/* ICON */
+/* ICON CONTAINER - NO BACKGROUND */
+.action-icon {
+    width: auto;
+    height: auto;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;        /* remove circle */
+    box-shadow: none;        /* remove glow circle */
+}
+
+/* SVG ICON STYLE */
+.action-icon svg {
+    width: 36px;
+    height: 36px;
+    fill: #00f5ff;           /* icon color */
+    transition: 0.3s;
+}
+
+/* HOVER EFFECT */
+.action-card:hover .action-icon svg {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 8px #00f5ff);
+}
+
+/* TEXT */
+.action-text {
+    font-size: 16px;
+    color: #e2e8f0;
+    font-weight: 600;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+    .dashboard-body{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        width:100%;
+        min-height:auto;
+        display:flex;
+        overflow-x:auto;
+    }
+
+    .menu-item{
+        flex:1;
+        text-align:center;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+    
+    <div style="display:flex; align-items:center; gap:20px;">
+        <div class="logo-area">🏛 TGiCCC</div>
+
+        <!-- SEARCH BOX LEFT SIDE -->
+        <div class="search-box">
+            <input type="text" placeholder="Search..." id="searchInput">
+            <span class="search-icon">🔍</span>
+        </div>
+    </div>
+
+    <div class="top-right">
+        <button class="logout-btn" onclick="logout()">LOGOUT</button>
+    </div>
+
+</div>
+
+<div class="dashboard-body">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+    <div class="menu-item active">
+        <!-- Dashboard -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+        </svg>
+        Dashboard
+    </div>
+
+    <div class="menu-item" onclick="goReportIncident()">
+        <!-- Incident -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 22h20L12 2zm0 14h-2v-2h2v2zm0-4h-2V8h2v4z"/>
+        </svg>
+        Report Incidents
+    </div>
+
+    <div class="menu-item" onclick="goNoticeBoard()">
+        <!-- Notice -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 13h2v-2H3v2zm4 0h14v-2H7v2zm-4 4h2v-2H3v2zm4 0h14v-2H7v2zM3 9h2V7H3v2zm4 0h14V7H7v2z"/>
+        </svg>
+        Notice Board
+    </div>
+
+    <div class="menu-item" onclick="goEvents()">
+        <!-- Events -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 2v2H5a2 2 0 00-2 2v2h18V6a2 2 0 00-2-2h-2V2h-2v2H9V2H7zm14 8H3v10a2 2 0 002 2h14a2 2 0 002-2V10z"/>
+        </svg>
+        Events
+    </div>
+
+    <div class="menu-item" onclick="goDirectory()">
+        <!-- Directory -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16 11c1.66 0 3-1.34 3-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zM8 11c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45v2H24v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+        Directory
+    </div>
+
+    <div class="menu-item" onclick="goDocument()">
+        <!-- Documents -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 2h9l5 5v15a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm8 1.5V8h4.5L14 3.5z"/>
+        </svg>
+        Documents
+    </div>
+
+    <div class="menu-item" onclick="goTaskManager()">
+        <!-- Task -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 16.2l-3.5-3.5L4 14.2 9 19l12-12-1.5-1.5z"/>
+        </svg>
+        Task Manager
+    </div>
+
+    <div class="menu-item" onclick="goGallery()">
+        <!-- Gallery -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 19V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14h18zM8 11l2.03 2.71L13 10l4 5H7l1-1z"/>
+        </svg>
+        Gallery
+    </div>
+
+    <div class="menu-item" onclick="goShiftDetails()">
+        <!-- Shift -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 1a11 11 0 1011 11A11 11 0 0012 1zm1 11H7v-2h4V6h2v6z"/>
+        </svg>
+        Shift Details
+    </div>
+
+    <div class="menu-item" onclick="goProfile()">
+        <!-- Profile -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 12c2.67 0 8 1.34 8 4v2H4v-2c0-2.66 5.33-4 8-4zm0-2a4 4 0 100-8 4 4 0 000 8z"/>
+        </svg>
+        My Profile
+    </div>
+
+    <div class="menu-item" onclick="goProfileDetails()">
+        <!-- ID Card -->
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2 4a2 2 0 012-2h16a2 2 0 012 2v16H2V4zm2 2v12h16V6H4zm2 2h6v2H6V8zm0 4h4v2H6v-2z"/>
+        </svg>
+        Profile Details
+    </div>
+
+</div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <h1 class="dashboard-title">COMMAND CENTER</h1>
+        <p class="welcome-text">Welcome back, System Administrator!</p>
+
+        <!-- STAT CARDS -->
+        <div class="dashboard-cards">
+
+            <div class="dash-card">
+                <div class="dash-icon">✉</div>
+                <div class="dash-number">24</div>
+                <div class="dash-title">ACTIVE NOTICES</div>
+                <div class="dash-sub">↑ 12% from yesterday</div>
+            </div>
+
+            <div class="dash-card">
+                <div class="dash-icon">🕒</div>
+                <div class="dash-number">98%</div>
+                <div class="dash-title">ATTENDANCE RATE</div>
+                <div class="dash-sub">↑ 5% this month</div>
+            </div>
+
+            <div class="dash-card">
+                <div class="dash-icon">👥</div>
+                <div class="dash-number">156</div>
+                <div class="dash-title">ACTIVE PERSONNEL</div>
+                <div class="dash-sub">↑ 4 online now</div>
+            </div>
+
+            <div class="dash-card">
+                <div class="dash-icon">📋</div>
+                <div class="dash-number">08</div>
+                <div class="dash-title">PENDING ITEMS</div>
+                <div class="dash-sub">Updated today</div>
+            </div>
+
+        </div>
+
+        <!-- ACTION BOXES -->
+        <div class="action-section">
+   <div class="action-header">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;">
+        <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/>
+    </svg>
+    Quick Actions
+</div>
+
+    <div class="action-grid">
+
+        <div class="action-card" onclick="goReportIncident()">
+            <div class="action-icon">
+                <!-- Incident -->
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2L2 22h20L12 2zm0 14h-2v-2h2v2zm0-4h-2V8h2v4z"/>
+                </svg>
+            </div>
+            <div class="action-text">Report Incident</div>
+        </div>
+
+        <div class="action-card" onclick="goNoticeBoard()">
+            <div class="action-icon">
+                <!-- Notice -->
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 13h2v-2H3v2zm4 0h14v-2H7v2zm-4 4h2v-2H3v2zm4 0h14v-2H7v2z"/>
+                </svg>
+            </div>
+            <div class="action-text">View Notices</div>
+        </div>
+
+        <div class="action-card" onclick="goGallery()">
+            <div class="action-icon">
+                <!-- Gallery -->
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 19V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14h18zM8 11l2 3 3-4 4 5H7z"/>
+                </svg>
+            </div>
+            <div class="action-text">Gallery</div>
+        </div>
+
+        <div class="action-card" onclick="goTaskManager()">
+            <div class="action-icon">
+                <!-- Task -->
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 16.2l-3.5-3.5L4 14.2 9 19l12-12-1.5-1.5z"/>
+                </svg>
+            </div>
+            <div class="action-text">Task Manager</div>
+        </div>
+
+         <!-- DIRECTORY -->
+<div class="action-card" onclick="goDirectory()">
+    <div class="action-icon">
+        <!-- Group Users (Better Directory Icon) -->
+        <svg viewBox="0 0 24 24">
+            <path d="M16 11c1.66 0 3-1.34 3-3S17.66 5 16 5s-3 
+            1.34-3 3 1.34 3 3 3zM8 11c1.66 0 3-1.34 3-3S9.66 
+            5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.67 0-8 
+            1.34-8 4v2h12v-2c0-2.66-5.33-4-8-4zm8 
+            0c-.29 0-.62.02-.97.05 1.16.84 
+            1.97 1.97 1.97 3.45v2H24v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+    </div>
+    <div class="action-text">Directory</div>
+</div>
+
+        <div class="action-card" onclick="goEvents()">
+    <div class="action-icon">
+        <!-- Calendar with Event Mark -->
+        <svg viewBox="0 0 24 24">
+            <path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 00-2 
+            2v14a2 2 0 002 2h14a2 2 0 
+            002-2V6a2 2 0 00-2-2zm0 
+            16H5V10h14v10zm-7-8l-3 3 1.41 
+            1.41L12 14.83l4.59 4.58L18 
+            18l-6-6z"/>
+        </svg>
+    </div>
+    <div class="action-text">Events</div>
+</div>
+
+        <div class="action-card" onclick="goDocument()">
+            <div class="action-icon">
+                <!-- File -->
+                <svg viewBox="0 0 24 24">
+                    <path d="M6 2h9l5 5v15H6z"/>
+                </svg>
+            </div>
+            <div class="action-text">Documents</div>
+        </div>
+
+       <div class="action-card" onclick="goShiftDetails()">
+            <div class="action-icon">
+                <!-- Clock -->
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 1a11 11 0 1011 11A11 11 0 0012 1zm1 11H7v-2h4V6h2z"/>
+                </svg>
+            </div>
+            <div class="action-text">Shift Details</div>
+        </div>
+
+       
+
+
+<!-- MY PROFILE -->
+<div class="action-card" onclick="goProfile()">
+    <div class="action-icon">
+        <!-- Single User Profile -->
+        <svg viewBox="0 0 24 24">
+            <path d="M12 12c2.76 0 5-2.24 
+            5-5s-2.24-5-5-5-5 2.24-5 
+            5 2.24 5 5 5zm0 2c-3.33 
+            0-10 1.67-10 5v3h20v-3c0-3.33-6.67-5-10-5z"/>
+        </svg>
+    </div>
+    <div class="action-text">My Profile</div>
+</div>
+
+
+<!-- PROFILE DETAILS (ID CARD STYLE) -->
+<div class="action-card" onclick="goProfileDetails()">
+    <div class="action-icon">
+        <!-- ID Card -->
+        <svg viewBox="0 0 24 24">
+            <path d="M2 4a2 2 0 012-2h16a2 2 0 
+            012 2v16H2V4zm2 2v12h16V6H4zm2 
+            2h6v2H6V8zm0 4h4v2H6v-2zm8-4a2 
+            2 0 110 4 2 2 0 010-4z"/>
+        </svg>
+    </div>
+    <div class="action-text">Profile Details</div>
+</div>
+
+        
+
+    </div>
+</div>
+
+<script>
+
+
+
+// SEARCH FUNCTIONALITY
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", function () {
+    const filter = searchInput.value.toLowerCase();
+
+    // Filter Sidebar Menu Items
+    const menuItems = document.querySelectorAll(".menu-item");
+    menuItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(filter) ? "block" : "none";
+    });
+
+    // Filter Quick Action Cards
+    const actionCards = document.querySelectorAll(".action-card");
+    actionCards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(filter) ? "block" : "none";
+    });
+
+    // Filter Dashboard Cards
+    const dashCards = document.querySelectorAll(".dash-card");
+    dashCards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(filter) ? "block" : "none";
+    });
+});
+
+
+
+async function loadUser(){
+
+const empId=localStorage.getItem("employee_id");
+
+if(!empId){
+alert("User not logged in");
+window.location="login.html";
+return;
+}
+
+const res=await fetch("http://localhost:5000/api/user/"+empId);
+const user=await res.json();
+
+document.getElementById("empid").innerText=user.employee_id;
+document.getElementById("name").innerText=user.name;
+document.getElementById("email").innerText=user.email;
+document.getElementById("phone").innerText=user.phone;
+document.getElementById("dept").innerText=user.department;
+
+}
+
+
+
+
+function goIncidents(){
+    window.location.href="incidents.html";
+}
+
+function goNoticeBoard(){
+    window.location.href="notice-board.html";
+}
+
+function goReportIncident(){
+    window.location.href="report-incident.html";
+}
+
+function goEvents(){
+    window.location.href="events.html";
+}
+
+function goDirectory(){
+    window.location.href="directory.html";
+}
+
+function goProfile(){
+    window.location.href="system-administration.html";
+}
+
+function goGallery(){
+    window.location.href="gallery.html";
+}
+
+function goDocument(){
+    window.location.href="document.html";
+}
+
+function goTaskManager(){
+    window.location.href="taskmanager.html";
+}
+
+function logout(){
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.replace("index.html");
+}
+
+function goProfile(){
+window.location.href="profile.html";
+}
+
+function goProfileDetails(){
+window.location.href="profiledetails.html";
+}
+
+function goShiftDetails(){
+window.location.href="shiftdetails.html";
+}
+
+</script>
+
+</body>
+</html>

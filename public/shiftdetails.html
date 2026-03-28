@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Shift Management</title>
+
+<style>
+
+/* BODY */
+body{
+    font-family:'Segoe UI',sans-serif;
+    background:#0f172a;
+    color:white;
+    margin:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+/* CONTAINER */
+.container{
+    width:520px;
+    max-height:90vh;
+    overflow-y:auto;
+    padding:30px;
+    background:#111827;
+    border-radius:12px;
+    border:1px solid #38bdf8;
+    box-shadow:
+        0 0 3px rgba(56,189,248,0.5),
+        0 0 2px rgba(56,189,248,0.3);
+    position:relative;
+}
+
+/* HEADER */
+.header{
+    font-size:28px;
+    font-weight:500;
+    text-align:center;
+    margin-bottom:20px;
+    color:#38bdf8;
+    text-shadow:
+        0 0 1px #38bdf8,
+        0 0 1px #38bdf8,
+        0 0 1px rgba(56,189,248,0.8);
+}
+
+/* CLOSE BUTTON */
+.close-btn{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    border:none;
+    background:#ef4444;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+/* FORM */
+.form-group{
+    margin-bottom:14px;
+}
+
+label{
+    display:block;
+    font-size:13px;
+    margin-bottom:5px;
+    color:#38bdf8;
+    font-weight:600;
+}
+
+input, select{
+    width:100%;
+    padding:11px;
+    border-radius:6px;
+    border:1px solid #1f2937;
+    background:#020617;
+    color:white;
+    outline:none;
+    font-size:14px;
+}
+
+input::placeholder{
+    color:#6b7280;
+}
+
+input:focus, select:focus{
+    border-color:#38bdf8;
+}
+
+input[type="time"]{
+    color:#38bdf8;
+    font-weight:500;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator{
+    filter: invert(1);
+    cursor:pointer;
+}
+
+/* BUTTON ROW CENTER */
+.btn-row{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-top:15px;
+}
+
+/* COMMON BUTTON */
+.btn-row button{
+    padding:11px 16px;
+    border:none;
+    border-radius:6px;
+    font-weight:600;
+    cursor:pointer;
+    color:white;
+}
+
+/* SAVE (BLUE) */
+.save-btn{
+    background:#3b82f6;
+    box-shadow:0 0 10px rgba(59,130,246,0.6);
+}
+
+.save-btn:hover{
+    background:#2563eb;
+}
+
+/* CURRENT (GREEN) */
+.current-btn{
+    background:#22c55e;
+    box-shadow:0 0 10px rgba(34,197,94,0.6);
+}
+
+.current-btn:hover{
+    background:#16a34a;
+}
+
+/* HISTORY (PURPLE) */
+.history-btn{
+    background:#a855f7;
+    box-shadow:0 0 10px rgba(168,85,247,0.6);
+}
+
+.history-btn:hover{
+    background:#9333ea;
+}
+
+
+/* UPCOMING (ORANGE) */
+.upcoming-btn{
+    background:#f97316;
+    box-shadow:0 0 10px rgba(249,115,22,0.7);
+}
+
+.upcoming-btn:hover{
+    background:#ea580c;
+}
+
+/* MESSAGE */
+.msg{
+    margin-top:10px;
+    text-align:center;
+    color:#22c55e;
+}
+
+.error{
+    color:#ef4444;
+}
+
+
+/* ================= POPUP ================= */
+
+#currentPopup{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.8);
+    justify-content:center;
+    align-items:center;
+}
+
+/* POPUP CARD */
+.popup-card{
+    width:620px;
+    background:linear-gradient(145deg,#0f172a,#020617);
+    border-radius:12px;
+    border:1px solid #38bdf8;
+    padding:20px;
+    position:relative;
+}
+
+/* POPUP HEADER */
+.popup-title{
+    color:#22d3ee;
+    font-weight:900;
+    text-align:center;
+    margin-bottom:15px;
+}
+
+/* INCHARGE BOX */
+.incharge-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px;
+    border:1px solid #1f2937;
+    border-radius:10px;
+    background:#111827;
+}
+
+/* CIRCLE ICON */
+.circle{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#0ea5e9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:bold;
+}
+
+/* BADGE */
+.badge{
+    margin-left:auto;
+    background:#22c55e;
+    padding:4px 8px;
+    border-radius:6px;
+    font-size:11px;
+}
+
+/* STAFF GRID */
+.staff-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.staff-card{
+    background:#111827;
+    padding:10px;
+    border-radius:10px;
+    border:1px solid #1f2937;
+}
+
+.dot{
+    width:6px;
+    height:6px;
+    background:#22d3ee;
+    border-radius:50%;
+    display:inline-block;
+    margin-right:6px;
+}
+
+.staff-name{
+    font-size:13px;
+    font-weight:500;
+}
+
+.staff-place{
+    font-size:11px;
+    color:#9ca3af;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<button class="close-btn" onclick="closePage()">✖</button>
+
+<div class="header">SHIFT MANAGEMENT</div>
+
+<div class="form-group">
+<label>Shift Type</label>
+<select id="shift_type">
+<option value="">Select Shift Type</option>
+<option value="Day">Day</option>
+<option value="Night">Night</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Shift Name</label>
+<input id="shift_name" placeholder="Enter Shift Name">
+</div>
+
+<div class="form-group">
+<label>Start Time</label>
+<input id="start_time" type="time">
+</div>
+
+<div class="form-group">
+<label>End Time</label>
+<input id="end_time" type="time">
+</div>
+
+<div class="form-group">
+<label>Place Name</label>
+<input id="place_name" placeholder="Enter Place Names (comma separated)">
+</div>
+
+<div class="form-group">
+<label>Incharge Name</label>
+<input id="incharge_name" placeholder="Enter Incharge Name">
+</div>
+
+<div class="form-group">
+<label>Phone No</label>
+<input id="phone_no" placeholder="Enter Phone Number">
+</div>
+
+<div class="form-group">
+<label>Extension No</label>
+<input id="extension_no" placeholder="Enter Extension Number">
+</div>
+
+<div class="form-group">
+<label>Total Staff</label>
+<input id="total_staff" placeholder="Enter Total Staff">
+</div>
+
+<div class="form-group">
+<label>Staff Names</label>
+<input id="staff_names" placeholder="Enter Staff Names (comma separated)">
+</div>
+
+<div class="form-group">
+<label>Emergency Contact</label>
+<input id="emergency_contact" placeholder="Enter Emergency Contact">
+</div>
+
+<div class="form-group">
+<label>Vehicles Deployed</label>
+<input id="vehicles_deployed" placeholder="Enter Vehicles Count">
+</div>
+
+<div class="form-group">
+<label>Active Cases</label>
+<input id="active_cases" placeholder="Enter Active Cases">
+</div>
+
+<!-- BUTTONS CENTER -->
+<div class="btn-row">
+
+<button class="save-btn" onclick="saveShift()">SAVE</button>
+<button class="current-btn" onclick="getCurrentShift()">CURRENT</button>
+<button class="history-btn" onclick="getShiftHistory()">HISTORY</button>
+<button class="upcoming-btn" onclick="getUpcomingShift()">UPCOMING</button>
+
+</div>
+
+<div id="msg" class="msg"></div>
+
+</div>
+
+
+<!-- ================= POPUP ================= -->
+
+<!-- CURRENT POPUP -->
+<div id="currentPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); justify-content:center; align-items:center;">
+
+<div style="width:360px; background:#0f172a; border-radius:14px; padding:18px; border:1px solid #22d3ee; position:relative;">
+
+    <!-- CLOSE -->
+    <button onclick="closePopup()" class="close-btn">✖</button>
+
+    <!-- HEADER -->
+    <div id="shiftTitle" style="font-size:13px; color:#22d3ee; margin-bottom:10px;">
+        DAY SHIFT – PERSONNEL
+    </div>
+
+    <!-- INCHARGE -->
+    <div style="display:flex; align-items:center; gap:10px; background:#111827; padding:10px; border-radius:10px; border:1px solid #1f2937;">
+
+        <div id="avatar" style="width:40px; height:40px; border-radius:50%; background:#0284c7; display:flex; align-items:center; justify-content:center; font-weight:bold;">
+            IC
+        </div>
+
+        <div style="flex:1;">
+            <div id="inchargeName" style="font-weight:600;">Name</div>
+            <div style="font-size:12px; color:#22d3ee;">SHIFT INCHARGE</div>
+            <div id="phone" style="font-size:12px; color:#9ca3af;"></div>
+        </div>
+
+        <div style="background:#16a34a; font-size:11px; padding:3px 6px; border-radius:6px;">
+            INCHARGE
+        </div>
+
+    </div>
+
+    <!-- STAFF TITLE -->
+    <div id="staffCount" style="margin-top:12px; font-size:12px; color:#94a3b8;">
+        STAFF ON DUTY (0)
+    </div>
+
+    <!-- STAFF GRID -->
+    <div id="staffGrid" style="margin-top:8px; display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
+
+</div>
+</div>
+
+
+
+
+<!-- HISTORY POPUP -->
+<div id="historyPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); justify-content:center; align-items:center;">
+
+<div style="width:700px; max-height:85vh; overflow-y:auto; background:#0f172a; border-radius:16px; padding:20px; border:1px solid #22d3ee; position:relative;">
+
+    <!-- CLOSE -->
+    <button onclick="closeHistory()" class="close-btn">✖</button>
+
+    <!-- HEADER -->
+    <div style="color:#22d3ee; font-size:16px; margin-bottom:10px;">
+        SHIFT HISTORY
+    </div>
+
+    <!-- LIST -->
+    <div id="historyList"></div>
+
+</div>
+</div>
+
+
+
+<!-- UPCOMING POPUP (SAME AS CURRENT UI) -->
+<div id="upcomingPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); justify-content:center; align-items:center;">
+
+<div style="width:360px; background:#0f172a; border-radius:14px; padding:18px; border:1px solid #f97316; position:relative;">
+
+    <!-- CLOSE -->
+    <button onclick="closeUpcoming()" class="close-btn">✖</button>
+
+    <!-- HEADER -->
+    <div id="upcomingShiftTitle" style="font-size:13px; color:#f97316; margin-bottom:10px;">
+        UPCOMING SHIFT – PERSONNEL
+    </div>
+
+    <!-- INCHARGE -->
+    <div style="display:flex; align-items:center; gap:10px; background:#111827; padding:10px; border-radius:10px; border:1px solid #1f2937;">
+
+        <div id="upcomingAvatar" style="width:40px; height:40px; border-radius:50%; background:#f97316; display:flex; align-items:center; justify-content:center; font-weight:bold;">
+            IC
+        </div>
+
+        <div style="flex:1;">
+            <div id="upcomingIncharge" style="font-weight:600;">Name</div>
+            <div style="font-size:12px; color:#f97316;">SHIFT INCHARGE</div>
+            <div id="upcomingPhone" style="font-size:12px; color:#9ca3af;"></div>
+        </div>
+
+        <div style="background:#16a34a; font-size:11px; padding:3px 6px; border-radius:6px;">
+            INCHARGE
+        </div>
+
+    </div>
+
+    <!-- STAFF TITLE -->
+    <div id="upcomingStaffCount" style="margin-top:12px; font-size:12px; color:#94a3b8;">
+        STAFF ON DUTY (0)
+    </div>
+
+    <!-- STAFF GRID -->
+    <div id="upcomingStaffGrid" style="margin-top:8px; display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
+
+</div>
+</div>
+
+<script>
+
+function closePage(){
+   window.location.href="dashboard.html";
+}
+
+/* SAVE */
+async function saveShift(){
+
+    const staffArray = staff_names.value.split(",").map(n=>n.trim()).filter(n=>n);
+    const placeArray = place_name.value.split(",").map(p=>p.trim()).filter(p=>p);
+
+    const data = {
+        shift_type:shift_type.value,
+        shift_name:shift_name.value,
+        start_time:start_time.value,
+        end_time:end_time.value,
+        place_name:placeArray,
+        incharge_name:incharge_name.value,
+        phone_no:phone_no.value,
+        extension_no:extension_no.value,
+        total_staff:total_staff.value,
+        staff_names:staffArray,
+        emergency_contact:emergency_contact.value,
+        vehicles_deployed:vehicles_deployed.value,
+        active_cases:active_cases.value
+    };
+
+    if(!data.shift_type || !data.shift_name || !data.start_time || !data.end_time || placeArray.length===0 || staffArray.length===0){
+        msg.innerText="Please fill required fields";
+        msg.className="msg error";
+        return;
+    }
+
+    try{
+        const res = await fetch("http://localhost:5000/api/shift",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        msg.innerText=result.message;
+        msg.className="msg";
+
+        document.querySelectorAll("input").forEach(i=>i.value="");
+        document.querySelector("select").value="";
+
+    }catch{
+        msg.innerText="Server Error";
+        msg.className="msg error";
+    }
+}
+
+
+/* CURRENT */
+async function getCurrentShift(){
+
+    document.getElementById("currentPopup").style.display="flex";
+
+    try{
+        const res = await fetch("http://localhost:5000/api/shift/current");
+
+        if(!res.ok){
+            document.getElementById("staffGrid").innerHTML = "No shift data";
+            return;
+        }
+
+        const data = await res.json();
+        console.log("LATEST DATA:", data);
+
+        // HEADER
+        document.getElementById("shiftTitle").innerText =
+            (data.shift_type || "DAY") + " SHIFT – PERSONNEL";
+
+        // INCHARGE
+        document.getElementById("inchargeName").innerText =
+            data.incharge_name || "N/A";
+
+        document.getElementById("phone").innerText =
+            "📞 " + (data.phone_no || "") + " | Ext: " + (data.extension_no || "");
+
+        // AVATAR
+        document.getElementById("avatar").innerText =
+            data.incharge_name
+            ? data.incharge_name.split(" ").map(x=>x[0]).join("").substring(0,2)
+            : "IC";
+
+        // STAFF + PLACE (already array from backend)
+        let staff = data.staff_names || [];
+        let place = data.place_name || [];
+
+        // COUNT
+        document.getElementById("staffCount").innerText =
+            "STAFF ON DUTY (" + staff.length + ")";
+
+        // GRID
+        let html = "";
+
+        staff.forEach((s,i)=>{
+            html += `
+            <div style="background:#111827; padding:10px; border-radius:10px; border:1px solid #1f2937;">
+                <div>
+                    <span style="width:6px;height:6px;background:#22d3ee;border-radius:50%;display:inline-block;margin-right:6px;"></span>
+                    ${s}
+                </div>
+                <div style="font-size:11px;color:#9ca3af;">
+                    ${place[i] || ""}
+                </div>
+            </div>`;
+        });
+
+        document.getElementById("staffGrid").innerHTML = html;
+
+    }catch(err){
+        console.log(err);
+        document.getElementById("staffGrid").innerHTML = "Error loading data";
+    }
+}
+
+function closePopup(){
+    document.getElementById("currentPopup").style.display="none";
+}
+
+
+async function getShiftHistory(){
+
+    document.getElementById("historyPopup").style.display="flex";
+
+    try{
+        const res = await fetch("http://localhost:5000/api/shift/history");
+
+        if(!res.ok){
+            historyList.innerHTML = "No history found";
+            return;
+        }
+
+        const data = await res.json();
+        console.log("HISTORY:", data);
+
+        let html = "";
+
+        data.forEach(s => {
+
+            let staff = s.staff_names || [];
+            let place = s.place_name || [];
+
+            html += `
+            <div style="margin-bottom:15px; border:1px solid #1f2937; border-radius:12px; padding:15px; background:#111827;">
+
+                <!-- HEADER -->
+                <div style="color:#22d3ee; font-size:13px; margin-bottom:10px;">
+                    ${s.shift_type} SHIFT – ${s.shift_name}
+                </div>
+
+                <!-- INCHARGE -->
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+
+                    <div style="width:35px;height:35px;border-radius:50%;background:#0284c7;display:flex;align-items:center;justify-content:center;">
+                        ${s.incharge_name ? s.incharge_name[0] : "IC"}
+                    </div>
+
+                    <div style="flex:1;">
+                <div>${s.incharge_name}</div>
+              <div style="font-size:11px;color:#9ca3af;">
+             📞 ${s.phone_no} | Ext: ${s.extension_no}
+               </div>
+              </div>
+
+                    <div style="background:#16a34a; padding:3px 6px; font-size:10px; border-radius:6px;">
+                        INCHARGE
+                    </div>
+
+                </div>
+
+                <!-- STAFF -->
+                <div style="font-size:11px; color:#94a3b8;">
+                    STAFF (${staff.length})
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:8px;">
+                    ${
+                        staff.map((st,i)=>`
+                        <div style="background:#020617; padding:8px; border-radius:8px;">
+                            <div>
+                                <span style="width:6px;height:6px;background:#22d3ee;border-radius:50%;display:inline-block;margin-right:6px;"></span>
+                                ${st}
+                            </div>
+                            <div style="font-size:10px;color:#9ca3af;">
+                                ${place[i] || ""}
+                            </div>
+                        </div>
+                        `).join("")
+                    }
+                </div>
+
+            </div>
+            `;
+        });
+
+        document.getElementById("historyList").innerHTML = html;
+
+    }catch(err){
+        console.log(err);
+        historyList.innerHTML = "Error loading history";
+    }
+}
+
+function closeHistory(){
+    document.getElementById("historyPopup").style.display="none";
+}
+
+
+
+async function getUpcomingShift(){
+
+    document.getElementById("upcomingPopup").style.display="flex";
+
+    try{
+
+        const res = await fetch("http://localhost:5000/api/shift/upcoming");
+
+        if(!res.ok){
+            document.getElementById("upcomingStaffGrid").innerHTML = "No upcoming shift";
+            return;
+        }
+
+        const data = await res.json();
+
+        // HEADER
+        document.getElementById("upcomingShiftTitle").innerText =
+            (data.shift_type || "SHIFT") + " – UPCOMING";
+
+        // INCHARGE
+        document.getElementById("upcomingIncharge").innerText =
+            data.incharge_name || "N/A";
+
+        document.getElementById("upcomingPhone").innerText =
+            "📞 " + (data.phone_no || "") + " | Ext: " + (data.extension_no || "");
+
+        // AVATAR
+        document.getElementById("upcomingAvatar").innerText =
+            data.incharge_name
+            ? data.incharge_name.split(" ").map(x=>x[0]).join("").substring(0,2)
+            : "IC";
+
+        // STAFF + PLACE
+        let staff = data.staff_names || [];
+        let place = data.place_name || [];
+
+        // COUNT
+        document.getElementById("upcomingStaffCount").innerText =
+            "STAFF ON DUTY (" + staff.length + ")";
+
+        // GRID
+        let html = "";
+
+        staff.forEach((s,i)=>{
+            html += `
+            <div style="background:#111827; padding:10px; border-radius:10px; border:1px solid #1f2937;">
+                <div>
+                    <span style="width:6px;height:6px;background:#f97316;border-radius:50%;display:inline-block;margin-right:6px;"></span>
+                    ${s}
+                </div>
+                <div style="font-size:11px;color:#9ca3af;">
+                    ${place[i] || ""}
+                </div>
+            </div>`;
+        });
+
+        document.getElementById("upcomingStaffGrid").innerHTML = html;
+
+    }catch(err){
+        console.log(err);
+        document.getElementById("upcomingStaffGrid").innerHTML = "Error loading upcoming shift";
+    }
+}
+
+function closeUpcoming(){
+    document.getElementById("upcomingPopup").style.display="none";
+}
+
+
+</script>
+
+</body>
+</html>
